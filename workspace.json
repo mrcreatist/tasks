@@ -1,4 +1,8 @@
 {
   "version": 2,
-  "projects": {}
+  "projects": {
+    "tasks-server": "apps/tasks-server",
+    "tasks-ui": "apps/tasks-ui",
+    "tasks-ui-e2e": "apps/tasks-ui-e2e"
+  }
 }
