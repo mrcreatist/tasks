@@ -1,0 +1,27 @@
+<app-header></app-header>
+<div class="view" cdkDropListGroup>
+    <app-section *ngFor="let list of getList()" [list]="list"></app-section>
+</div>
+
+<div *ngIf="!getList()?.length" class="intro">
+    <h1>Welcome to Tasks</h1>
+    <ul>
+        <li>You can create board by clicking on <button mat-flat-button class="button">
+                <mat-icon>add</mat-icon> Board
+            </button> button from the top bar</li>
+        <li>
+            In this web app you can arrange tasks in 2 ways
+            <ol>
+                <li> <strong>By Created</strong> - Sorting on the basis of creation date</li>
+                <li> <strong>Free Fall</strong> - Place task anywhere within the boards</li>
+            </ol>
+        </li>
+        <li>You can update the setting by clicking on the <mat-icon>settings</mat-icon> icon</li>
+        <li>This project has the capability to sync the boards over server and for that socket has been used but you can
+            ignore the code since it was out of requirement</li>
+        <li>This project is mobile responsive</li>
+    </ul>
+
+    <br><br>
+    <h4>Made by Abhishek Verma</h4>
+</div>

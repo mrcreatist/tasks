@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ConfigurationService } from './service';
 
 @Component({
   selector: 'tasks-root',
@@ -6,5 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'tasks-ui';
+  constructor (
+    private _config: ConfigurationService
+  ) {
+    if (!this._config.isAvailable()) {
+      this._config.setup();
+    }
+  }
 }

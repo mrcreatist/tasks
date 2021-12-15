@@ -1,0 +1,24 @@
+<div class="item">
+    <div class="data" [ngStyle]="{'text-decoration': item.completed ? 'line-through' : 'none'}">
+        <h4>{{item.title}}</h4>
+        <p *ngIf="item.description">{{item.description}}</p>
+    </div>
+    <button mat-button class="menu_btn">
+        <mat-icon [matMenuTriggerFor]="menu">more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu" xPosition="before" style="display: none">
+        <button mat-menu-item (click)="onAction(item.completed ? ACTION.MARK_AS_UNDONE : ACTION.MARK_AS_DONE)">
+            <mat-icon *ngIf="item.completed">label_off</mat-icon>
+            <mat-icon *ngIf="!item.completed">check</mat-icon>
+            {{item.completed ? ACTION.MARK_AS_UNDONE : ACTION.MARK_AS_DONE}}
+        </button>
+        <button mat-menu-item (click)="onAction(ACTION.UPDATE)">
+            <mat-icon>drive_file_rename_outline</mat-icon>
+            {{ACTION.UPDATE}}
+        </button>
+        <button mat-menu-item (click)="onAction(ACTION.DELETE)">
+            <mat-icon>delete_outline</mat-icon>
+            {{ACTION.DELETE}}
+        </button>
+    </mat-menu>
+</div>

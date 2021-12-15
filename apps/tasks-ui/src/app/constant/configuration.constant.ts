@@ -1,0 +1,4 @@
+export const CONFIGURATION = {
+    STORAGE_MODE: 'SOCKET',
+    SORT_MODE: 'FREE_FALL'
+}

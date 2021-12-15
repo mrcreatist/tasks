@@ -5,12 +5,16 @@
   "targets": {
     "build": {
       "executor": "@nrwl/node:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/tasks-server",
         "main": "apps/tasks-server/src/main.ts",
         "tsConfig": "apps/tasks-server/tsconfig.app.json",
-        "assets": ["apps/tasks-server/src/assets"]
+        "assets": [
+          "apps/tasks-server/src/assets"
+        ]
       },
       "configurations": {
         "production": {
@@ -34,14 +38,20 @@
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/tasks-server/**/*.ts"]
+        "lintFilePatterns": [
+          "apps/tasks-server/**/*.ts"
+        ]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/tasks-server"],
+      "outputs": [
+        "coverage/apps/tasks-server"
+      ],
       "options": {
         "jestConfig": "apps/tasks-server/jest.config.js",
         "passWithNoTests": true

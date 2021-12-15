@@ -1,0 +1,22 @@
+<h1 mat-dialog-title>{{data ? 'Rename Task' : 'New Task'}}</h1>
+<div mat-dialog-content>
+    <form [formGroup]="form">
+        <mat-form-field>
+            <mat-label>Task Name</mat-label>
+            <input matInput formControlName="title">
+            <mat-error *ngIf="form.controls.title.touched && form.controls.title.errors">Field is required
+            </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Task Description</mat-label>
+            <input matInput formControlName="description">
+            <mat-error *ngIf="form.controls.description.touched && form.controls.description.errors">Field is
+                required
+            </mat-error>
+        </mat-form-field>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="closeDialog()">Cancel</button>
+    <button mat-button (click)="submit()" cdkFocusInitial>{{data ? 'Update' : 'Add'}}</button>
+</div>

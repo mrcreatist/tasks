@@ -1,0 +1,26 @@
+<h1 mat-dialog-title>Settings</h1>
+<div mat-dialog-content>
+
+  <div class="sort_club">
+    <ng-container *ngFor="let set of getSettingKey(), let i=index" [ngTemplateOutlet]="setting"
+      [ngTemplateOutletContext]="{$implicit: set, idx: i}"></ng-container>
+  </div>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="reset()">Reset</button>
+  <button mat-button (click)="closeDialog()">Cancel</button>
+  <button mat-button (click)="submit()" cdkFocusInitial>Save</button>
+</div>
+
+
+<ng-template #setting let-setting let-index='idx'>
+  <mat-form-field class="select_sort" appearance="outline">
+    <mat-label style="text-transform: capitalize;">{{getSettingHeading(setting)}}</mat-label>
+    <mat-select (selectionChange)="updateSetting(setting, $event)" [(value)]="settings[setting]">
+      <mat-option *ngFor="let item of getEnumKeys(getParentEnum(setting))" value="{{item}}">
+        {{getParentEnum(setting)[item]}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</ng-template>

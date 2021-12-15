@@ -1,0 +1,27 @@
+.item {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  .data {
+    width: 15rem;
+
+    h4 {
+      margin: 0;
+      text-align: left;
+    }
+    p {
+      margin-bottom: 0;
+      text-align: left;
+    }
+  }
+}
+
+.menu_btn {
+  border-radius: 12rem;
+  width: 2.5rem;
+  padding: 0;
+  min-width: 0;
+  border-radius: 100%;
+}

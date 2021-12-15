@@ -1,0 +1,94 @@
+@import "../../../assets/variable.scss";
+.container {
+  display: flex;
+  flex-direction: column;
+  width: auto;
+  text-align: center;
+  min-width: 20rem;
+  margin: 0.8rem;
+  max-width: 20rem;
+  border-radius: 12px;
+  padding: 6px 16px 16px;
+
+  @media screen and (max-width: $mobile) {
+    width: calc(100vw - 4rem);
+    margin: 12px auto;
+    max-width: 40rem;
+  }
+}
+
+.head {
+  display: flex;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: space-between;
+
+  mat-card-title {
+    font-weight: bold;
+    font-size: 20px;
+  }
+}
+
+.menu_btn {
+  border-radius: 100%;
+}
+
+.list {
+  width: 100%;
+  margin: auto;
+  max-width: 100%;
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.box {
+  padding: 16px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+
+  app-item {
+    display: flex;
+    width: 100%;
+  }
+}
+
+.box:last-child {
+  border: none;
+}
+
+.custom-placeholder {
+  background: #ccc;
+  border: dotted 3px #999;
+  min-height: 62px;
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.add_button {
+  width: fit-content;
+  margin: 1rem auto 0;
+  border-radius: 3rem;
+  padding: 0 2rem;
+}
+
+.empty-list {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  position: ABSOLUTE;
+  justify-content: center;
+  align-items: center;
+  color: grey;
+}

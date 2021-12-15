@@ -1,0 +1,25 @@
+mat-toolbar {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.button {
+  width: fit-content;
+  margin: 0;
+}
+
+.right_btn {
+  margin-right: 10px;
+}
+
+.setting {
+  cursor: pointer;
+  margin-right: 20px;
+}

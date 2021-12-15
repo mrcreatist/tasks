@@ -1,0 +1,19 @@
+<mat-toolbar class="mat-elevation-z10" color="primary">
+  <span>Tasks</span>
+  <span class="spacer"></span>
+  <mat-icon class="setting" (click)="openSettings()">settings</mat-icon>
+  <ng-container *ngIf="hasBoard()">
+    <button mat-flat-button class="button right_btn" [matMenuTriggerFor]="board">
+      <mat-icon>add</mat-icon> Task
+    </button>
+    <mat-menu #board="matMenu">
+      <button *ngFor="let board of boardList()" style="text-transform: capitalize;" mat-menu-item
+        (click)="addTask(board)">
+        <h4 style="margin: 0">{{board.name}}</h4>
+      </button>
+    </mat-menu>
+  </ng-container>
+  <button mat-flat-button class="button" (click)="addNewSection()">
+    <mat-icon>add</mat-icon> Board
+  </button>
+</mat-toolbar>
