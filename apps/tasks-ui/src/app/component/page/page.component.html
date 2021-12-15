@@ -1,6 +1,6 @@
-<app-header></app-header>
+<tasks-ui-header></tasks-ui-header>
 <div class="view" cdkDropListGroup>
-    <app-section *ngFor="let list of getList()" [list]="list"></app-section>
+    <tasks-ui-section *ngFor="let list of getList()" [list]="list"></tasks-ui-section>
 </div>
 
 <div *ngIf="!getList()?.length" class="intro">

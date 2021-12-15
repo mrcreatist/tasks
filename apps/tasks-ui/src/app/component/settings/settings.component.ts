@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatSelectChange } from '@angular/material/select';
-import { CONFIGURATION } from 'src/app/constant';
-import { SortModeEnum, StorageModeEnum } from 'src/app/enum';
-import { ConfigurationService, MainService } from 'src/app/service';
+import { CONFIGURATION } from '../../constant';
+import { SortModeEnum, StorageModeEnum } from '../../enum';
+import { ConfigurationService, MainService } from '../../service';
 
 class settingDetail {
   name: string;
-  parameter: any;
+  parameter: object;
 }
 
 @Component({
-  selector: 'app-settings',
+  selector: 'tasks-ui-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
@@ -43,7 +42,7 @@ export class SettingsComponent implements OnInit {
   }
 
   getParentEnum(settingKey: string) {
-    let configKeys = Object.keys(CONFIGURATION);
+    const configKeys = Object.keys(CONFIGURATION);
     switch (settingKey) {
       case configKeys[0]: {
         return StorageModeEnum;
@@ -51,12 +50,15 @@ export class SettingsComponent implements OnInit {
       case configKeys[1]: {
         return SortModeEnum;
       }
+      default: {
+        return StorageModeEnum;
+      }
     }
   }
 
   // SETTING DROP-DOWNS
 
-  getEnumKeys(enumObj): Array<string> {
+  getEnumKeys(enumObj: object): Array<string> {
     return Object.keys(enumObj)
   }
 
@@ -67,26 +69,26 @@ export class SettingsComponent implements OnInit {
   }
 
   processQueue(setting: string) {
-    switch (setting) {
-      case 'STORAGE_MODE': {
-        this.setStorageMode(this.settings[setting]);
-        break;
-      }
-      case 'SORT_MODE': {
-        this.setSortMode(this.settings[setting]);
-        break;
-      }
-    }
+    // switch (setting) {
+    //   case 'STORAGE_MODE': {
+    //     this.setStorageMode(this.settings[setting]);
+    //     break;
+    //   }
+    //   case 'SORT_MODE': {
+    //     this.setSortMode(this.settings[setting]);
+    //     break;
+    //   }
+    // }
   }
 
   // MAIN IMPLEMENTERS
 
-  setSortMode(value) {
-    this._main.setSortMode(SortModeEnum[value]);
+  setSortMode(value: string) {
+    // this._main.setSortMode(SortModeEnum[value]);
   }
 
-  setStorageMode(value) {
-    this._main.setStorageMode(StorageModeEnum[value]);
+  setStorageMode(value: string) {
+    // this._main.setStorageMode(StorageModeEnum[value]);
   }
 
   // DIALOG ACTIONS
@@ -102,10 +104,10 @@ export class SettingsComponent implements OnInit {
   }
 
   reset() {
-    let defaultConfig = this._config.getConfigurationConstant();
-    Object.keys(defaultConfig).forEach(element => this.settings[element] = defaultConfig[element]);
-    this._main.setSortMode(SortModeEnum[this.settings['SORT_MODE']]);
-    this._main.setStorageMode(StorageModeEnum[this.settings['STORAGE_MODE']]);
+    const defaultConfig = this._config.getConfigurationConstant();
+    // Object.keys(defaultConfig).forEach(element => this.settings[element] = defaultConfig[element]);
+    // this._main.setSortMode(SortModeEnum[this.settings['SORT_MODE']]);
+    // this._main.setStorageMode(StorageModeEnum[this.settings['STORAGE_MODE']]);
     this._config.saveConfiguration(this.settings);
     this.dialogRef.close('Reset Successful! 🥳');
   }

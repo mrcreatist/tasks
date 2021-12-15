@@ -19,7 +19,7 @@
     <mat-label style="text-transform: capitalize;">{{getSettingHeading(setting)}}</mat-label>
     <mat-select (selectionChange)="updateSetting(setting, $event)" [(value)]="settings[setting]">
       <mat-option *ngFor="let item of getEnumKeys(getParentEnum(setting))" value="{{item}}">
-        {{getParentEnum(setting)[item]}}
+        <!-- {{getParentEnum(setting)[item]}} -->
       </mat-option>
     </mat-select>
   </mat-form-field>

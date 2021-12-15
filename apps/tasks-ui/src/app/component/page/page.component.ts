@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { BoardModel } from 'src/app/model';
 import { MainService } from '../../service';
 
 @Component({
-  selector: 'app-page',
+  selector: 'tasks-ui-page',
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.scss']
 })

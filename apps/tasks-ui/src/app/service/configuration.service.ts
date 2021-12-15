@@ -1,27 +1,29 @@
 import { Injectable } from '@angular/core';
 import { CONFIGURATION } from '../constant';
+import { SettingsModel } from '../model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConfigurationService {
 
-  settings: any;
-  localKey = 'config'
+  settings: SettingsModel;
+  localKey = 'config';
 
   constructor () {
-    this.settings = this.readFromLocalStorage() || CONFIGURATION;
+    this.settings = this.readFromLocalStorage() ?? CONFIGURATION;
   }
 
-  setInLocalStorage(data) {
+  setInLocalStorage(data: SettingsModel) {
     localStorage.setItem(this.localKey, JSON.stringify(data));
   }
 
   readFromLocalStorage() {
-    return JSON.parse(localStorage.getItem(this.localKey))
+    const config = localStorage.getItem(this.localKey);
+    return config ? JSON.parse(config) : null;
   }
 
-  getConfiguration(): Array<string> {
+  getConfiguration(): SettingsModel {
     return this.settings;
   }
 
@@ -29,12 +31,12 @@ export class ConfigurationService {
     return CONFIGURATION;
   }
 
-  saveConfiguration(setting) {
+  saveConfiguration(setting: SettingsModel) {
     this.setInLocalStorage(setting);
   }
 
-  isAvailable() {
-    return this.readFromLocalStorage() ? true : false;
+  isConfigAvailable(): boolean {
+    return this.readFromLocalStorage();
   }
 
   setup() {

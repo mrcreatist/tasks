@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItemModel } from 'src/app/model';
+import { ItemModel } from '../../model';
 
 @Component({
-  selector: 'app-add-item',
+  selector: 'tasks-ui-add-item',
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.scss']
 })

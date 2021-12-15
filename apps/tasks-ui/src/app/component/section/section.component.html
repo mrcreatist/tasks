@@ -18,7 +18,7 @@
     <div cdkDropList [cdkDropListData]="list" class="list" (cdkDropListDropped)="drop($event)">
         <div class="box" *ngFor="let item of list.data" cdkDrag>
             <div class="custom-placeholder" *cdkDragPlaceholder></div>
-            <app-item [item]="item" (update)="updateItem($event)"></app-item>
+            <tasks-ui-item [item]="item" (update)="updateItem($event)"></tasks-ui-item>
         </div>
         <div class="empty-list" *ngIf="!list.data.length">Your tasks will appear here!</div>
     </div>

@@ -1,3 +1,6 @@
 export const environment = {
-  production: true,
+  socket: {
+    URL: 'https://tasks-socket-server.herokuapp.com/'
+  },
+  production: true
 };

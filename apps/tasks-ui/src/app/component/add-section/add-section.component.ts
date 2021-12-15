@@ -1,10 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BoardModel } from 'src/app/model';
+import { BoardModel } from '../../model';
 
 @Component({
-  selector: 'app-add-section',
+  selector: 'tasks-ui-add-section',
   templateUrl: './add-section.component.html',
   styleUrls: ['./add-section.component.scss']
 })

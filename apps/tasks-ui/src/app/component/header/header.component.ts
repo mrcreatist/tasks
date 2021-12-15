@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BoardModel } from 'src/app/model';
-import { MainService } from 'src/app/service';
+import { BoardModel } from '../../model';
+import { MainService } from '../../service';
 import { SettingsComponent } from '../settings';
 import { AddItemComponent } from '../add-item';
 import { AddSectionComponent } from '../add-section';
 
 @Component({
-  selector: 'app-header',
+  selector: 'tasks-ui-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
 
-  boards = [];
+  boards: Array<BoardModel> = [];
 
   constructor (
     private dialog: MatDialog,
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
   updateBoardList() {
     this.boards = [];
-    this._main.getList()?.forEach(item => this.boards.push(item))
+    this._main.getList()?.forEach((item: BoardModel) => this.boards.push(item))
   }
 
   addNewSection() {

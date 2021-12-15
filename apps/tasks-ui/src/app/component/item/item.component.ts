@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ItemModel } from 'src/app/model';
-import { MainService } from 'src/app/service';
-import { AddItemComponent } from '../add-item';
+import { ItemModel } from '../../model';
+import { MainService } from '../../service';
 
 @Component({
-  selector: 'app-item',
+  selector: 'tasks-ui-item',
   templateUrl: './item.component.html',
   styleUrls: ['./item.component.scss']
 })

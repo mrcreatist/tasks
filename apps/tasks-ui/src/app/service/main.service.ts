@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ItemModel, BoardModel, ItemDataModel } from '../model';
+import { ItemModel, BoardModel, ItemDataModel, SettingsModel } from '../model';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { SortModeEnum, StorageModeEnum } from '../enum';
 import { SocketService } from './socket.service';
 import { ConfigurationService } from './configuration.service';
+import { CONFIGURATION_KEYS } from '../constant';
 
 @Injectable({
   providedIn: 'root'
@@ -18,9 +19,9 @@ export class MainService {
     private _socket: SocketService,
     private _config: ConfigurationService
   ) {
-    let configuration = this._config.getConfiguration();
-    this.setStorageMode(StorageModeEnum[configuration['STORAGE_MODE']]);
-    this.setSortMode(SortModeEnum[configuration['SORT_MODE']]);
+    const configuration: SettingsModel = this._config.getConfiguration();
+    this.setStorageMode(StorageModeEnum[configuration.STORAGE_MODE]);
+    this.setSortMode(SortModeEnum[configuration.SORT_MODE]);
 
     switch (this.storageMode) {
       case StorageModeEnum.SOCKET:
@@ -33,23 +34,28 @@ export class MainService {
     }
   }
 
-  setStorageMode(storage: StorageModeEnum) {
-    this.storageMode = storage;
+  setStorageMode(storage: string) {
+    this.storageMode = <StorageModeEnum>storage;
   }
 
-  setSortMode(mode: SortModeEnum) {
-    this.sortMode = mode;
+  setSortMode(mode: string) {
+    this.sortMode = <SortModeEnum>mode;
   }
 
   updateTasks(data: Array<BoardModel>) {
     switch (this.storageMode) {
-      case StorageModeEnum.SOCKET:
+      case StorageModeEnum.SOCKET: {
         this.lists = (data === null ? [] : data);
         break;
-      case StorageModeEnum.LOCAL_STORAGE:
+      }
       default:
-        this.lists = JSON.parse(localStorage.getItem('data')) ? JSON.parse(localStorage.getItem('data')) : [];
+      case StorageModeEnum.LOCAL_STORAGE: {
+        const item = localStorage.getItem('data');
+        if (item) {
+          this.lists = JSON.parse(item);
+        }
         break;
+      }
     }
   }
 
@@ -71,7 +77,7 @@ export class MainService {
   // BOARD OPERATIONS
 
   addSection(name: string) {
-    let section: BoardModel = {
+    const section: BoardModel = {
       id: this._getId(),
       name: name,
       data: [],
@@ -82,7 +88,7 @@ export class MainService {
   }
 
   deleteSection(list: BoardModel) {
-    let tempList: Array<BoardModel> = [];
+    const tempList: Array<BoardModel> = [];
     this.lists.forEach((l: BoardModel) => {
       if (l.id !== list.id) {
         tempList.push(l);
@@ -105,18 +111,21 @@ export class MainService {
   // TASK OPERATIONS
 
   addItem(id: number, item: ItemDataModel) {
-    let data: ItemModel = {
+    const data: ItemModel = {
       id: this._getId(),
       title: item.title,
       description: item.description,
       completed: false,
       created: this.getTimeStamp()
     };
-    this.lists.find(_ => _.id === id).data.push(data)
+    this.lists.find((e: BoardModel) => e.id === id)?.data.push(data)
 
     if (this.sortMode === SortModeEnum.BY_CREATED) {
-      let current = this.lists.indexOf(this.lists.find(_ => _.id === id));
-      this.sortByTime(current);
+      const element = this.lists.find((e: BoardModel) => e.id === id);
+      if (element) {
+        const current = this.lists.indexOf(element);
+        this.sortByTime(current);
+      }
     }
 
     this.syncData();
@@ -146,9 +155,9 @@ export class MainService {
   }
 
   deleteItem(item: ItemModel) {
-    let tempList: Array<BoardModel> = [];
+    const tempList: Array<BoardModel> = [];
     this.lists.forEach((l: BoardModel) => {
-      let tempItems: Array<ItemModel> = [];
+      const tempItems: Array<ItemModel> = [];
       l.data.forEach((i: ItemModel) => {
         if (i.id !== item.id) {
           tempItems.push(i);

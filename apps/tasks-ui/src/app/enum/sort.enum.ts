@@ -1,4 +1,4 @@
 export enum SortModeEnum {
-    BY_CREATED = 'By Created',
-    FREE_FALL = 'Free Fall'
+    BY_CREATED = 'BY_CREATED',
+    FREE_FALL = 'FREE_FALL'
 }

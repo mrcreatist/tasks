@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AddItemComponent } from 'src/app/component/add-item/add-item.component';
-import { ItemModel, BoardModel, ItemDataModel } from 'src/app/model';
-import { MainService } from 'src/app/service';
+import { AddItemComponent } from '../../component';
+import { ItemModel, BoardModel, ItemDataModel } from '../../model';
+import { MainService } from '../../service';
 import { AddSectionComponent } from '../add-section';
 
 @Component({
-  selector: 'app-section',
+  selector: 'tasks-ui-section',
   templateUrl: './section.component.html',
   styleUrls: ['./section.component.scss']
 })
