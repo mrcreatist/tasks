@@ -12,7 +12,10 @@ export class SocketService {
 
   initializeSocket(success: Function) {
     this.socket = io(`${environment.socket.URL}`);
-    this.socket.on('fireInTheHole', (res: Array<BoardModel>) => success(res));
+    this.socket.on('fireInTheHole', (res: Array<BoardModel>) => {
+      console.log('initialized connection socket')
+      success(res)
+    });
   }
 
   sendData(data: Array<BoardModel>) {
