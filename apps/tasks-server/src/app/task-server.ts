@@ -3,7 +3,7 @@ import * as cors from "cors";
 import * as http from "http";
 import * as SocketIO from 'socket.io';
 import * as fs from 'fs';
-// import { TaskModel } from "@libs/shared";
+import { SOCKET_EVENT } from "@libs/shared";
 
 export class TaskServer {
     public static readonly PORT: number = 3333;
@@ -50,13 +50,13 @@ export class TaskServer {
 
         this.io.on('connection', (socket) => {
             console.log('welcome', socket.id);
-            socket.emit('fireInTheHole', this.readDataFromFile());
-            socket.on('fireInTheHole', () => {
-                console.log('fireInTheHole event triggered')
+            socket.emit(SOCKET_EVENT.fireInTheHole, this.readDataFromFile());
+            socket.on(SOCKET_EVENT.fireInTheHole, () => {
+                console.log(`${SOCKET_EVENT.fireInTheHole} event triggered`)
             });
-            socket.on('makeFireInTheHole', (data) => {
+            socket.on(SOCKET_EVENT.makeFireInTheHole, (data) => {
                 this.writeDataToFile(data);
-                socket.broadcast.emit('fireInTheHole', this.readDataFromFile());
+                socket.broadcast.emit(SOCKET_EVENT.fireInTheHole, this.readDataFromFile());
             });
             socket.on('disconnect', () => {
                 console.log('disconnected from server')

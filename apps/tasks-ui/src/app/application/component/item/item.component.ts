@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ItemModel } from '@libs/shared';
 import { MainService } from '../../service';
 
@@ -21,8 +20,7 @@ export class ItemComponent {
   @Output() update = new EventEmitter<ItemModel>();
 
   constructor (
-    private _main: MainService,
-    private dialog: MatDialog
+    private _main: MainService
   ) { }
 
   onAction(action: string) {

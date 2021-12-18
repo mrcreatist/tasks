@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AddItemComponent } from '../../component';
 import { ItemModel, BoardModel, ItemDataModel } from '@libs/shared';
+import { AddItemComponent } from '../add-item';
 import { MainService } from '../../service';
 import { AddSectionComponent } from '../add-section';
 

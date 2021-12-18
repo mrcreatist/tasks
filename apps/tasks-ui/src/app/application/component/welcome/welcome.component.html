@@ -1,9 +1,4 @@
-<tasks-ui-header></tasks-ui-header>
-<div class="view" cdkDropListGroup>
-    <tasks-ui-section *ngFor="let list of getList()" [list]="list"></tasks-ui-section>
-</div>
-
-<div *ngIf="!getList()?.length" class="intro">
+<div class="intro">
     <h1>Welcome to Tasks</h1>
     <ul>
         <li>You can create board by clicking on <button mat-flat-button class="button">

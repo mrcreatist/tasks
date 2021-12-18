@@ -1,23 +1,24 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { io } from 'socket.io-client';
-import { BoardModel } from '@libs/shared';
+import { BoardModel, SOCKET_EVENT } from '@libs/shared';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private socket: any;
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   initializeSocket(success: Function) {
     this.socket = io(`${environment.socket.URL}`);
-    this.socket.on('fireInTheHole', (res: Array<BoardModel>) => success(res));
+    this.socket.on(SOCKET_EVENT.fireInTheHole, (res: Array<BoardModel>) => success(res));
   }
 
   sendData(data: Array<BoardModel>) {
-    this.socket.emit('makeFireInTheHole', data);
+    this.socket.emit(SOCKET_EVENT.makeFireInTheHole, data);
   }
 
 }

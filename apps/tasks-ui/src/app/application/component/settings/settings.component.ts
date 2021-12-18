@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { CONFIGURATION, SortModeEnum, StorageModeEnum } from '@libs/shared';
-import { ConfigurationService, MainService } from '../../service';
+import { ConfigurationService } from '../../service';
 
 class settingDetail {
   name: string;
@@ -15,12 +15,12 @@ class settingDetail {
 })
 export class SettingsComponent implements OnInit {
 
-  queue: Array<settingDetail> = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   settings: any;
+  queue: Array<settingDetail> = [];
 
   constructor (
     private dialogRef: MatDialogRef<SettingsComponent>,
-    private _main: MainService,
     private _config: ConfigurationService
   ) { }
 
