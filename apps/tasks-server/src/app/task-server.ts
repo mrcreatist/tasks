@@ -2,7 +2,8 @@ import * as express from "express";
 import * as cors from "cors";
 import * as http from "http";
 import * as SocketIO from 'socket.io';
-// import { Message } from "./model";
+import * as fs from 'fs';
+import { TaskModel } from "../../../../libs/shared/model";
 
 export class TaskServer {
     public static readonly PORT: number = 3333;
@@ -10,6 +11,7 @@ export class TaskServer {
     private server: http.Server;
     private io: SocketIO.Server;
     private port: string | number;
+    private file = 'task-data.json';
 
     constructor () {
         this.createApp();
@@ -46,17 +48,35 @@ export class TaskServer {
             console.log("Running server on port", this.port);
         });
 
-        this.io.on("connect", (socket: any) => {
-            console.log("Connected client on port %s.", this.port);
-            // socket.on("message", (m: Message) => {
-            //     console.log("[server](message): %s", JSON.stringify(m));
-            //     this.io.emit("message", m);
-            // });
-
-            // socket.on("disconnect", () => {
-            //     console.log("Client disconnected");
-            // });
+        this.io.on('connection', (socket: any) => {
+            console.log('welcome', socket.id);
+            socket.emit('fireInTheHole', this.readDataFromFile());
+            socket.on('fireInTheHole', () => {
+                console.log('fireInTheHole event triggered')
+            });
+            socket.on('makeFireInTheHole', (data) => {
+                this.writeDataToFile(data);
+                socket.broadcast.emit('fireInTheHole', this.readDataFromFile());
+            });
+            socket.on('disconnect', () => {
+                console.log('disconnected from server')
+            });
         });
+    }
+
+    private writeDataToFile(dataStore) {
+        const data = JSON.stringify(dataStore);
+        if (data && data.length) {
+            fs.writeFileSync(this.file, data);
+        }
+    }
+
+    private readDataFromFile() {
+        if (!fs.existsSync(this.file)) {
+            this.writeDataToFile(null);
+        }
+        const rawData = fs.readFileSync(this.file);
+        return JSON.parse(rawData.toString());
     }
 
     public getApp(): express.Application {
