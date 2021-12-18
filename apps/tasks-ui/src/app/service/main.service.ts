@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
-import { ItemModel, BoardModel, ItemDataModel, SettingsModel } from '../model';
+import { ItemModel, BoardModel, ItemDataModel, SettingsModel, SortModeEnum, StorageModeEnum } from '@libs/shared';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { SortModeEnum, StorageModeEnum } from '../enum';
 import { SocketService } from './socket.service';
 import { ConfigurationService } from './configuration.service';
-import { CONFIGURATION_KEYS } from '../constant';
-
 @Injectable({
   providedIn: 'root'
 })

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ItemModel } from '../../model';
+import { ItemModel } from '@libs/shared';
 import { MainService } from '../../service';
 
 @Component({

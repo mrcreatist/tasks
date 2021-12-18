@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ItemModel } from '../../model';
+import { ItemModel } from '@libs/shared';
 
 @Component({
   selector: 'tasks-ui-add-item',

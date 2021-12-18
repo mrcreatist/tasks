@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CONFIGURATION } from '../../constant';
-import { SortModeEnum, StorageModeEnum } from '../../enum';
+import { CONFIGURATION, SortModeEnum, StorageModeEnum } from '@libs/shared';
 import { ConfigurationService, MainService } from '../../service';
 
 class settingDetail {

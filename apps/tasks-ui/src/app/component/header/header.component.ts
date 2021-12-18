@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BoardModel } from '../../model';
+import { BoardModel } from '@libs/shared';
 import { MainService } from '../../service';
 import { SettingsComponent } from '../settings';
 import { AddItemComponent } from '../add-item';

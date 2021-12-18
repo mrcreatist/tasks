@@ -3,7 +3,7 @@ import * as cors from "cors";
 import * as http from "http";
 import * as SocketIO from 'socket.io';
 import * as fs from 'fs';
-import { TaskModel } from "../../../../libs/shared/model";
+// import { TaskModel } from "@libs/shared";
 
 export class TaskServer {
     public static readonly PORT: number = 3333;
@@ -48,7 +48,7 @@ export class TaskServer {
             console.log("Running server on port", this.port);
         });
 
-        this.io.on('connection', (socket: any) => {
+        this.io.on('connection', (socket) => {
             console.log('welcome', socket.id);
             socket.emit('fireInTheHole', this.readDataFromFile());
             socket.on('fireInTheHole', () => {

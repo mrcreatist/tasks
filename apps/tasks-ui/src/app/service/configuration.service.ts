@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CONFIGURATION } from '../constant';
-import { SettingsModel } from '../model';
+import { CONFIGURATION, SettingsModel } from '@libs/shared';
 
 @Injectable({
   providedIn: 'root'

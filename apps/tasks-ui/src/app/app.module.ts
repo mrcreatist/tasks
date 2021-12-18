@@ -4,7 +4,7 @@ import { components, dialogs, providers } from './declaration';
 import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MaterialModule } from './module';
+import { MaterialModule } from '@libs/shared';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
