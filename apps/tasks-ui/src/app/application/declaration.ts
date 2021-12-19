@@ -1,4 +1,4 @@
-import { AddItemComponent, AddSectionComponent, SettingsComponent, PageComponent, SectionComponent, ItemComponent, HeaderComponent, WelcomeComponent } from './component';
+import { AddItemComponent, AddSectionComponent, SettingsComponent, PageComponent, SectionComponent, ItemComponent, HeaderComponent, WelcomeComponent, BoardComponent } from './component';
 import { ConfigurationService, MainService, SocketService } from './service';
 
 export const dialogs = [
@@ -13,7 +13,8 @@ export const components = [
     SectionComponent,
     ItemComponent,
     HeaderComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    BoardComponent
 ];
 
 export const providers = [

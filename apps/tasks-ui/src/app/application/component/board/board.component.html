@@ -1,0 +1,5 @@
+<ng-container cdkDropListGroup>
+    <tasks-ui-section *ngFor="let list of getList()" [list]="list"></tasks-ui-section>
+</ng-container>
+
+<tasks-ui-welcome *ngIf="!getList()?.length"></tasks-ui-welcome>

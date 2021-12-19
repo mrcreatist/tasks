@@ -6,3 +6,4 @@ export * from './section';
 export * from './settings';
 export * from './header';
 export * from './welcome';
+export * from './board';

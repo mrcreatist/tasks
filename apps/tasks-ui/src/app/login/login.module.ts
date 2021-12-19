@@ -3,12 +3,16 @@ import { CommonModule } from '@angular/common';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { components, providers } from './declarations';
+import { MaterialModule } from '@libs/shared';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: components,
   imports: [
     CommonModule,
-    LoginRoutingModule
+    LoginRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule
   ],
   providers: providers
 })

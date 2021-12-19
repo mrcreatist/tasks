@@ -1,7 +1,11 @@
-import { LoginComponent } from './component';
+import { ForgotPasswordComponent, LandingComponent, LoginComponent, LoginHeaderComponent, RegisterComponent } from './component';
 
 export const components = [
-    LoginComponent
+    LoginComponent,
+    LandingComponent,
+    RegisterComponent,
+    ForgotPasswordComponent,
+    LoginHeaderComponent
 ];
 
 export const providers = [];
