@@ -3,7 +3,7 @@ import * as cors from "cors";
 import * as http from "http";
 import * as SocketIO from 'socket.io';
 import * as fs from 'fs';
-import { SOCKET_EVENT } from "@libs/shared";
+import { SOCKET_EVENT } from "@libs/shared/constant";
 
 export class TaskServer {
     public static readonly PORT: number = 3333;
