@@ -5,6 +5,12 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 
+  mat-label,
+  mat-select,
+  mat-option {
+    text-transform: capitalize;
+  }
+
   @media screen and (max-width: $mobile) {
     grid-template-columns: 1fr;
   }

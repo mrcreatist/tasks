@@ -16,11 +16,10 @@
 
 <ng-template #setting let-setting let-index='idx'>
   <mat-form-field class="select_sort" appearance="outline">
-    <mat-label style="text-transform: capitalize;">{{toNormalText(setting)}}</mat-label>
-    {{getSettingValue(setting)}}
-    <mat-select (selectionChange)="updateSetting(setting, $event)" (value)="getSettingValue(setting)">
+    <mat-label>{{toNormalText(setting)}}</mat-label>
+    <mat-select (selectionChange)="updateSetting(setting, $event)" [value]="getSettingValue(setting)">
       <mat-option *ngFor="let item of getEnumKeys(getEnum(setting))" value="{{item}}">
-        {{toNormalText(getEnum(setting)?.[item])}}, {{item}}
+        {{toNormalText(getEnum(setting)?.[item]) | titlecase}}
       </mat-option>
     </mat-select>
   </mat-form-field>
