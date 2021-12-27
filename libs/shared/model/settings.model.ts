@@ -1,6 +1,11 @@
-import { SortModeEnum, StorageModeEnum } from "../enum";
+import { SortModeEnum, StorageModeEnum, SettingKeysEnum } from "../enum";
 
 export class SettingsModel {
-    STORAGE_MODE: StorageModeEnum;
-    SORT_MODE: SortModeEnum;
+    [SettingKeysEnum.SORT_MODE]: SortModeEnum;
+    [SettingKeysEnum.STORAGE_MODE]: StorageModeEnum;
+
+    constructor () {
+        this.STORAGE_MODE = StorageModeEnum.SOCKET;
+        this.SORT_MODE = SortModeEnum.FREE_FALL;
+    }
 }

@@ -8,7 +8,7 @@ const routes: Routes = [
     component: LandingComponent,
     children: [
       {
-        path: '',
+        path: 'login',
         component: LoginComponent
       }, {
         path: 'register',
@@ -16,6 +16,10 @@ const routes: Routes = [
       }, {
         path: 'forgot-password',
         component: ForgotPasswordComponent
+      }, {
+        path: '**',
+        redirectTo: 'login',
+        pathMatch: 'full'
       }
     ]
   }

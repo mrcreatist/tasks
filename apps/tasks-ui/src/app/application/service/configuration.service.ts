@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CONFIGURATION, SettingsModel } from '@libs/shared';
+import { SettingsModel } from '@libs/shared';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +10,7 @@ export class ConfigurationService {
   localKey = 'config';
 
   constructor () {
-    this.settings = this.readFromLocalStorage() ?? CONFIGURATION;
+    this.settings = this.readFromLocalStorage();
   }
 
   setInLocalStorage(data: SettingsModel) {
@@ -24,10 +24,6 @@ export class ConfigurationService {
 
   getConfiguration(): SettingsModel {
     return this.settings;
-  }
-
-  getConfigurationConstant() {
-    return CONFIGURATION;
   }
 
   saveConfiguration(setting: SettingsModel) {

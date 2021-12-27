@@ -1,4 +1,0 @@
-export const CONFIGURATION_KEYS = {
-    STORAGE_MODE: 'STORAGE_MODE',
-    SORT_MODE: 'SORT_MODE'
-}

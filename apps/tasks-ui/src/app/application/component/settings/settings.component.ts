@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { CONFIGURATION, SortModeEnum, StorageModeEnum } from '@libs/shared';
-import { ConfigurationService } from '../../service';
+import { MatSelectChange } from '@angular/material/select';
+import { SettingsModel } from '@libs/shared';
+import { ConfigurationService, SettingsService } from '../../service';
 
 class settingDetail {
   name: string;
@@ -15,99 +16,65 @@ class settingDetail {
 })
 export class SettingsComponent implements OnInit {
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  settings: any;
+  settings: SettingsModel;
   queue: Array<settingDetail> = [];
 
   constructor (
     private dialogRef: MatDialogRef<SettingsComponent>,
-    private _config: ConfigurationService
+    private _config: ConfigurationService,
+    private _settings: SettingsService
   ) { }
 
   ngOnInit() {
-    this._getSettings();
+    this._initializeSettings();
   }
 
-  private _getSettings() {
-    this.settings = this._config.getConfiguration();
+  private _initializeSettings() {
+    this.settings = this._settings.getDefaultSettings();
   }
 
-  getSettingHeading(name: string) {
-    return name.toLowerCase().replace('_', ' ');
+  toNormalText(item: string) {
+    return item.toLowerCase().replace('_', ' ');
+  }
+
+  getSettingValue(set: keyof SettingsModel) {
+    return this.settings[set].toString();
   }
 
   getSettingKey() {
     return Object.keys(this.settings);
   }
 
-  getParentEnum(settingKey: string) {
-    const configKeys = Object.keys(CONFIGURATION);
-    switch (settingKey) {
-      case configKeys[0]: {
-        return StorageModeEnum;
-      }
-      case configKeys[1]: {
-        return SortModeEnum;
-      }
-      default: {
-        return StorageModeEnum;
-      }
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getEnum(settingKey: string): any {
+    const item = this._settings.getTypeEnum(settingKey);
+    return item ? item : null;
   }
 
-  // SETTING DROP-DOWNS
-
-  getEnumKeys(enumObj: object): Array<string> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getEnumKeys(enumObj: any): Array<string> {
     return Object.keys(enumObj)
   }
 
-  // PROCESS FUNCTIONS
-
-  updateSetting(name: string, param: any) {
-    this.settings[name] = param?.value;
+  updateSetting(key: keyof SettingsModel, param: MatSelectChange) {
+    this.settings = {
+      ...this.settings,
+      [key]: param.value
+    };
   }
 
-  processQueue(setting: string) {
-    // switch (setting) {
-    //   case 'STORAGE_MODE': {
-    //     this.setStorageMode(this.settings[setting]);
-    //     break;
-    //   }
-    //   case 'SORT_MODE': {
-    //     this.setSortMode(this.settings[setting]);
-    //     break;
-    //   }
-    // }
-  }
-
-  // MAIN IMPLEMENTERS
-
-  setSortMode(value: string) {
-    // this._main.setSortMode(SortModeEnum[value]);
-  }
-
-  setStorageMode(value: string) {
-    // this._main.setStorageMode(StorageModeEnum[value]);
-  }
-
-  // DIALOG ACTIONS
-
-  closeDialog() {
-    this.dialogRef.close();
+  closeDialog(message: string = '') {
+    this.dialogRef.close(message);
   }
 
   submit() {
-    this.getSettingKey().forEach(q => this.processQueue(q));
-    this._config.saveConfiguration(this.settings);
-    this.dialogRef.close('Settings Saved! 🎉');
+    this._settings.setSettings(this.settings);
+    this.closeDialog('Settings Saved! 🎉')
   }
 
   reset() {
-    const defaultConfig = this._config.getConfigurationConstant();
-    // Object.keys(defaultConfig).forEach(element => this.settings[element] = defaultConfig[element]);
-    // this._main.setSortMode(SortModeEnum[this.settings['SORT_MODE']]);
-    // this._main.setStorageMode(StorageModeEnum[this.settings['STORAGE_MODE']]);
-    this._config.saveConfiguration(this.settings);
+    this._settings.resetSettings();
+    this.settings = this._settings.getCurrentSettings();
     this.dialogRef.close('Reset Successful! 🥳');
   }
 

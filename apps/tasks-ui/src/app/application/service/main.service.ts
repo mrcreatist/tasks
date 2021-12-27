@@ -17,8 +17,8 @@ export class MainService {
     private _config: ConfigurationService
   ) {
     const configuration: SettingsModel = this._config.getConfiguration();
-    this.setStorageMode(StorageModeEnum[configuration.STORAGE_MODE]);
-    this.setSortMode(SortModeEnum[configuration.SORT_MODE]);
+    // this.setStorageMode(StorageModeEnum[configuration.STORAGE_MODE]);
+    // this.setSortMode(SortModeEnum[configuration.SORT_MODE]);
 
     switch (this.storageMode) {
       case StorageModeEnum.SOCKET:
@@ -31,12 +31,12 @@ export class MainService {
     }
   }
 
-  setStorageMode(storage: string) {
-    this.storageMode = <StorageModeEnum>storage;
+  setStorageMode(storage: StorageModeEnum) {
+    this.storageMode = storage;
   }
 
-  setSortMode(mode: string) {
-    this.sortMode = <SortModeEnum>mode;
+  setSortMode(mode: SortModeEnum) {
+    this.sortMode = mode;
   }
 
   updateTasks(data: Array<BoardModel>) {
