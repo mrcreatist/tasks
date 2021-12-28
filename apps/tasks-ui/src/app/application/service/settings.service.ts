@@ -5,25 +5,28 @@ import { SettingKeysEnum, SettingsModel, SortModeEnum, StorageModeEnum } from '@
 export class SettingsService {
 
     settings: SettingsModel;
+    localKey = 'config';
 
-    constructor () {
+    initSettings() {
         this.settings = new SettingsModel();
+        this.writeLocal();
     }
 
-    getDefaultSettings() {
-        return new SettingsModel();
+    getSettings() {
+        if (!this.settings) {
+            this.initSettings();
+        }
+        return this.settings;
     }
 
     setSettings(newSettings: SettingsModel) {
         this.settings = newSettings;
-    }
-
-    getCurrentSettings() {
         return this.settings;
     }
 
     resetSettings() {
-        this.setSettings(new SettingsModel());
+        this.initSettings();
+        return this.settings;
     }
 
     getTypeEnum(type: string) {
@@ -32,6 +35,23 @@ export class SettingsService {
             case SettingKeysEnum.STORAGE_MODE: return StorageModeEnum
             default: return null
         }
+    }
+
+    setup() {
+        if (!this.readLocal()) {
+            this.initSettings();
+        } else {
+            this.settings = this.readLocal();
+        }
+    }
+
+    readLocal() {
+        const data = localStorage.getItem(this.localKey);
+        return data ? <SettingsModel>JSON.parse(data) : new SettingsModel();
+    }
+
+    writeLocal() {
+        localStorage.setItem(this.localKey, JSON.stringify(this.settings));
     }
 
 }

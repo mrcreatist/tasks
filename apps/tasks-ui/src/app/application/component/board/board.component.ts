@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ConfigurationService, MainService } from '../../service';
+import { MainService, SettingsService } from '../../service';
 
 @Component({
   selector: 'tasks-ui-board',
@@ -10,11 +10,9 @@ export class BoardComponent {
 
   constructor (
     private _main: MainService,
-    private _config: ConfigurationService
+    private _settings: SettingsService
   ) {
-    if (!this._config.isConfigAvailable()) {
-      this._config.setup();
-    }
+    this._settings.setup();
   }
 
   getList() {

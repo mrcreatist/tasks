@@ -16,10 +16,6 @@ export class MainService {
     private _socket: SocketService,
     private _config: ConfigurationService
   ) {
-    const configuration: SettingsModel = this._config.getConfiguration();
-    // this.setStorageMode(StorageModeEnum[configuration.STORAGE_MODE]);
-    // this.setSortMode(SortModeEnum[configuration.SORT_MODE]);
-
     switch (this.storageMode) {
       case StorageModeEnum.SOCKET:
         this._socket.initializeSocket((data: Array<BoardModel>) => (console.log(data), this.updateTasks(data)));

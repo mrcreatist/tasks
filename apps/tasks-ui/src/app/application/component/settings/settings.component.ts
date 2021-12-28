@@ -30,7 +30,7 @@ export class SettingsComponent implements OnInit {
   }
 
   private _initializeSettings() {
-    this.settings = this._settings.getDefaultSettings();
+    this.settings = this._settings.getSettings();
   }
 
   toNormalText(item: string) {
@@ -74,7 +74,7 @@ export class SettingsComponent implements OnInit {
 
   reset() {
     this._settings.resetSettings();
-    this.settings = this._settings.getCurrentSettings();
+    this.settings = this._settings.getSettings();
     this.dialogRef.close('Reset Successful! 🥳');
   }
 
