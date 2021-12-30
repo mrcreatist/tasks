@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemModel } from '@libs/shared';
-import { MainService } from '../../service';
+import { TaskService } from '../../service';
 
 @Component({
   selector: 'tasks-ui-item',
@@ -20,17 +20,17 @@ export class ItemComponent {
   @Output() update = new EventEmitter<ItemModel>();
 
   constructor (
-    private _main: MainService
+    private _task: TaskService
   ) { }
 
   onAction(action: string) {
     switch (action) {
       case this.ACTION.MARK_AS_DONE:
       case this.ACTION.MARK_AS_UNDONE:
-        this._main.markItem(this.item);
+        this._task.markItem(this.item);
         break;
       case this.ACTION.DELETE:
-        this._main.deleteItem(this.item);
+        this._task.deleteItem(this.item);
         break;
       case this.ACTION.UPDATE:
         this.update.emit(this.item);

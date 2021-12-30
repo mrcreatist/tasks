@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ItemModel, BoardModel, ItemDataModel } from '@libs/shared';
 import { AddItemComponent } from '../add-item';
-import { MainService } from '../../service';
+import { TaskService } from '../../service';
 import { AddSectionComponent } from '../add-section';
 
 @Component({
@@ -20,7 +20,7 @@ export class SectionComponent {
   @Input() list: BoardModel;
 
   constructor (
-    private _main: MainService,
+    private _task: TaskService,
     private dialog: MatDialog
   ) { }
 
@@ -29,7 +29,7 @@ export class SectionComponent {
       width: '250px'
     }).afterClosed().subscribe((result: ItemDataModel) => {
       if (result) {
-        this._main.addItem(this.list.id, result)
+        this._task.addItem(this.list.id, result)
       }
     });
   }
@@ -39,7 +39,7 @@ export class SectionComponent {
       width: '250px', data: item
     }).afterClosed().subscribe(result => {
       if (result) {
-        this._main.updateItem(item, result);
+        this._task.updateItem(item, result);
       }
     });
   }
@@ -49,17 +49,17 @@ export class SectionComponent {
       width: '250px', data: this.list
     }).afterClosed().subscribe((result: string) => {
       if (result) {
-        this._main.renameSection(this.list, result);
+        this._task.renameSection(this.list, result);
       }
     });
   }
 
   private _deleteSection() {
-    this._main.deleteSection(this.list);
+    this._task.deleteSection(this.list);
   }
 
   drop(event: any) {
-    this._main.drop(event);
+    this._task.drop(event);
   }
 
   onAction(action: string) {

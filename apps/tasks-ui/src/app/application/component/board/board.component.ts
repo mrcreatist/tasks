@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MainService, SettingsService } from '../../service';
+import { TaskService, SettingsService } from '../../service';
 
 @Component({
   selector: 'tasks-ui-board',
@@ -9,14 +9,12 @@ import { MainService, SettingsService } from '../../service';
 export class BoardComponent {
 
   constructor (
-    private _main: MainService,
+    private _task: TaskService,
     private _settings: SettingsService
-  ) {
-    this._settings.setup();
-  }
+  ) { this._settings.establish() }
 
   getList() {
-    return this._main.getList();
+    return this._task.getList();
   }
 
 }

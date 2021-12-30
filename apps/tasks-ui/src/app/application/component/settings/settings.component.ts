@@ -2,12 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectChange } from '@angular/material/select';
 import { SettingsModel } from '@libs/shared';
-import { ConfigurationService, SettingsService } from '../../service';
-
-class settingDetail {
-  name: string;
-  parameter: object;
-}
+import { SettingsService } from '../../service';
 
 @Component({
   selector: 'tasks-ui-settings',
@@ -17,11 +12,9 @@ class settingDetail {
 export class SettingsComponent implements OnInit {
 
   settings: SettingsModel;
-  queue: Array<settingDetail> = [];
 
   constructor (
     private dialogRef: MatDialogRef<SettingsComponent>,
-    private _config: ConfigurationService,
     private _settings: SettingsService
   ) { }
 

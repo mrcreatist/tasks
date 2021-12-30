@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BoardModel } from '@libs/shared';
-import { MainService } from '../../service';
+import { TaskService } from '../../service';
 import { SettingsComponent } from '../settings';
 import { AddItemComponent } from '../add-item';
 import { AddSectionComponent } from '../add-section';
@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
 
   constructor (
     private dialog: MatDialog,
-    private _main: MainService,
+    private _task: TaskService,
     private _snackBar: MatSnackBar
   ) { }
 
@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
   updateBoardList() {
     this.boards = [];
-    this._main.getList()?.forEach((item: BoardModel) => this.boards.push(item))
+    this._task.getList()?.forEach((item: BoardModel) => this.boards.push(item))
   }
 
   addNewSection() {
@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
       width: '250px'
     }).afterClosed().subscribe((result: string) => {
       if (result) {
-        this._main.addSection(result);
+        this._task.addSection(result);
       }
     });
   }
@@ -51,7 +51,7 @@ export class HeaderComponent implements OnInit {
       width: '250px'
     }).afterClosed().subscribe(result => {
       if (result) {
-        this._main.addItem(board.id, result)
+        this._task.addItem(board.id, result)
       }
     });
   }

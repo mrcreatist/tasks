@@ -1,42 +1,26 @@
 import { Injectable } from '@angular/core';
-import { ItemModel, BoardModel, ItemDataModel, SettingsModel, SortModeEnum, StorageModeEnum } from '@libs/shared';
+import { ItemModel, BoardModel, ItemDataModel, SortModeEnum, StorageModeEnum } from '@libs/shared';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { SocketService } from './socket.service';
-import { ConfigurationService } from './configuration.service';
+import { ActionService } from './action.service';
+import { SettingsService } from './settings.service';
 @Injectable({
   providedIn: 'root'
 })
-export class MainService {
+export class TaskService {
 
-  private storageMode: StorageModeEnum;
-  private sortMode: SortModeEnum;
   private lists: Array<BoardModel> = [];
 
   constructor (
-    private _socket: SocketService,
-    private _config: ConfigurationService
-  ) {
-    switch (this.storageMode) {
-      case StorageModeEnum.SOCKET:
-        this._socket.initializeSocket((data: Array<BoardModel>) => (console.log(data), this.updateTasks(data)));
-        break;
-      case StorageModeEnum.LOCAL_STORAGE:
-      default:
-        setTimeout(() => this.updateTasks([]))
-        break;
-    }
-  }
+    private _action: ActionService,
+    private _settings: SettingsService
+  ) { this.apply() }
 
-  setStorageMode(storage: StorageModeEnum) {
-    this.storageMode = storage;
-  }
-
-  setSortMode(mode: SortModeEnum) {
-    this.sortMode = mode;
+  apply() {
+    this._action.applyStorageMode(this._settings.getSettings(), (data: Array<BoardModel>) => this.updateTasks(data))
   }
 
   updateTasks(data: Array<BoardModel>) {
-    switch (this.storageMode) {
+    switch (this._settings.getSettings().STORAGE_MODE) {
       case StorageModeEnum.SOCKET: {
         this.lists = (data === null ? [] : data);
         break;
@@ -52,21 +36,6 @@ export class MainService {
     }
   }
 
-  private syncData() {
-    if (this.lists) {
-      switch (this.storageMode) {
-        case StorageModeEnum.SOCKET:
-          this._socket.sendData(this.lists);
-          break;
-        case StorageModeEnum.LOCAL_STORAGE:
-        default:
-          localStorage.setItem('data', JSON.stringify(this.lists));
-          this.updateTasks(this.lists);
-          break;
-      }
-    }
-  }
-
   // BOARD OPERATIONS
 
   addSection(name: string) {
@@ -77,7 +46,7 @@ export class MainService {
       created: this.getTimeStamp()
     };
     this.lists.push(section);
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   deleteSection(list: BoardModel) {
@@ -88,7 +57,7 @@ export class MainService {
       }
     });
     this.lists = tempList;
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   renameSection(list: BoardModel, newName: string) {
@@ -98,7 +67,7 @@ export class MainService {
         l.created = this.getTimeStamp();
       }
     });
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   // TASK OPERATIONS
@@ -113,7 +82,7 @@ export class MainService {
     };
     this.lists.find((e: BoardModel) => e.id === id)?.data.push(data)
 
-    if (this.sortMode === SortModeEnum.BY_CREATED) {
+    if (this._settings.getSettings().SORT_MODE === SortModeEnum.BY_CREATED) {
       const element = this.lists.find((e: BoardModel) => e.id === id);
       if (element) {
         const current = this.lists.indexOf(element);
@@ -121,7 +90,7 @@ export class MainService {
       }
     }
 
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   markItem(item: ItemModel) {
@@ -144,7 +113,7 @@ export class MainService {
         }
       });
     })
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   deleteItem(item: ItemModel) {
@@ -160,11 +129,12 @@ export class MainService {
       tempList.push(l);
     });
     this.lists = tempList;
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   // SORT FUNCTION
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   drop(event: any) {
     let previous, current;
     if (event.previousContainer === event.container) {
@@ -175,7 +145,7 @@ export class MainService {
       current = this.lists.indexOf(event.container.data);
       transferArrayItem(this.lists[previous].data, this.lists[current].data, event.previousIndex, event.currentIndex);
     }
-    switch (this.sortMode) {
+    switch (this._settings.getSettings().SORT_MODE) {
       case SortModeEnum.BY_CREATED: {
         this.sortByTime(current)
         break;
@@ -186,7 +156,7 @@ export class MainService {
       }
     }
 
-    this.syncData();
+    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
   }
 
   sortByTime(current: number) {
