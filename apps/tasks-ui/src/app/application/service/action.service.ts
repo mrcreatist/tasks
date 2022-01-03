@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-types */
 import { Injectable } from '@angular/core';
 import { SocketService } from './socket.service';
 import { BoardModel, SettingsModel, SortModeEnum, StorageModeEnum } from '@libs/shared';
@@ -5,37 +6,54 @@ import { BoardModel, SettingsModel, SortModeEnum, StorageModeEnum } from '@libs/
 @Injectable()
 export class ActionService {
 
+    data: Array<BoardModel>;
+
     constructor (
         private _socket: SocketService
     ) { }
 
-    // APPLY SETTINGS
+    // TEMPLATE
 
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    applyStorageMode(settings: SettingsModel, callback: Function) {
+    storageTemplate(settings: SettingsModel, localStorageFn: Function, socketFn: Function) {
         switch (settings.STORAGE_MODE) {
-            case StorageModeEnum.LOCAL_STORAGE: {
-                this._socket.initializeSocket((data: Array<BoardModel>) => callback(data));
+            case StorageModeEnum.SOCKET: {
+                socketFn();
                 break;
             }
-            case StorageModeEnum.SOCKET:
+            case StorageModeEnum.LOCAL_STORAGE:
             default: {
-                setTimeout(() => callback([]))
+                localStorageFn();
                 break;
             }
         }
     }
 
-    applySortMode(settings: SettingsModel) {
+    sortTemplate(settings: SettingsModel, freeFall: Function, createdBy: Function) {
         switch (settings.SORT_MODE) {
             case SortModeEnum.BY_CREATED: {
+                createdBy();
                 break;
             }
             case SortModeEnum.FREE_FALL:
             default: {
+                freeFall();
                 break;
             }
         }
+    }
+
+    // APPLY SETTINGS
+
+    applyStorageMode(settings: SettingsModel) {
+        this.storageTemplate(
+            settings,
+            () => (this._socket.close(), setTimeout(() => this.data = [])),
+            () => this._socket.initializeSocket((data: Array<BoardModel>) => this.data = data)
+        );
+    }
+
+    applySortMode(settings: SettingsModel) {
+        this.sortTemplate(settings, () => null, () => null);
     }
 
     // LOCAL STORAGE OPS
@@ -51,6 +69,17 @@ export class ActionService {
 
     writeLocalTasks(data: Array<BoardModel>) {
         localStorage.setItem('data', JSON.stringify(data));
+    }
+
+    readLocalTasks() {
+        const data = localStorage.getItem('data');
+        return data ? <Array<BoardModel>>JSON.parse(data) : [];
+    }
+
+    // DATA OPS
+
+    getData() {
+        return this.data;
     }
 
     // SOCKET

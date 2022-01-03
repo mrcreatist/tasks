@@ -21,4 +21,8 @@ export class SocketService {
     this.socket.emit(SOCKET_EVENT.makeFireInTheHole, data);
   }
 
+  close() {
+    // this.socket.disconnect();
+  }
+
 }

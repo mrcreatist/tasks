@@ -5,7 +5,7 @@ export class SettingsModel {
     [SettingKeysEnum.STORAGE_MODE]: StorageModeEnum;
 
     constructor () {
-        this.STORAGE_MODE = StorageModeEnum.SOCKET;
+        this.STORAGE_MODE = StorageModeEnum.LOCAL_STORAGE;
         this.SORT_MODE = SortModeEnum.FREE_FALL;
     }
 }

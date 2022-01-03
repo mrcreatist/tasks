@@ -7,9 +7,8 @@
       <mat-icon>add</mat-icon> Task
     </button>
     <mat-menu #board="matMenu">
-      <button *ngFor="let board of boardList()" style="text-transform: capitalize;" mat-menu-item
-        (click)="addTask(board)">
-        <h4 style="margin: 0">{{board.name}}</h4>
+      <button *ngFor="let board of boardList()" mat-menu-item (click)="addTask(board)">
+        <h4>{{board.name}}</h4>
       </button>
     </mat-menu>
   </ng-container>

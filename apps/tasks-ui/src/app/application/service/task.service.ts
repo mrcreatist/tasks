@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ItemModel, BoardModel, ItemDataModel, SortModeEnum, StorageModeEnum } from '@libs/shared';
+import { ItemModel, BoardModel, ItemDataModel, SortModeEnum, SettingsModel } from '@libs/shared';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { ActionService } from './action.service';
 import { SettingsService } from './settings.service';
@@ -9,31 +9,21 @@ import { SettingsService } from './settings.service';
 export class TaskService {
 
   private lists: Array<BoardModel> = [];
+  private setting: SettingsModel;
 
   constructor (
     private _action: ActionService,
     private _settings: SettingsService
-  ) { this.apply() }
-
-  apply() {
-    this._action.applyStorageMode(this._settings.getSettings(), (data: Array<BoardModel>) => this.updateTasks(data))
+  ) {
+    this.setting = this._settings.getSettings();
+    this.update(this._action.getData())
   }
 
-  updateTasks(data: Array<BoardModel>) {
-    switch (this._settings.getSettings().STORAGE_MODE) {
-      case StorageModeEnum.SOCKET: {
-        this.lists = (data === null ? [] : data);
-        break;
-      }
-      default:
-      case StorageModeEnum.LOCAL_STORAGE: {
-        const item = localStorage.getItem('data');
-        if (item) {
-          this.lists = JSON.parse(item);
-        }
-        break;
-      }
-    }
+  update(data: Array<BoardModel>) {
+    this._action.storageTemplate(
+      this.setting,
+      () => this.lists = this._action.readLocalTasks() ? this._action.readLocalTasks() : [],
+      () => this.lists = (data === null ? [] : data));
   }
 
   // BOARD OPERATIONS
@@ -46,7 +36,7 @@ export class TaskService {
       created: this.getTimeStamp()
     };
     this.lists.push(section);
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   deleteSection(list: BoardModel) {
@@ -57,7 +47,7 @@ export class TaskService {
       }
     });
     this.lists = tempList;
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   renameSection(list: BoardModel, newName: string) {
@@ -67,7 +57,7 @@ export class TaskService {
         l.created = this.getTimeStamp();
       }
     });
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   // TASK OPERATIONS
@@ -82,7 +72,7 @@ export class TaskService {
     };
     this.lists.find((e: BoardModel) => e.id === id)?.data.push(data)
 
-    if (this._settings.getSettings().SORT_MODE === SortModeEnum.BY_CREATED) {
+    if (this.setting.SORT_MODE === SortModeEnum.BY_CREATED) {
       const element = this.lists.find((e: BoardModel) => e.id === id);
       if (element) {
         const current = this.lists.indexOf(element);
@@ -90,7 +80,7 @@ export class TaskService {
       }
     }
 
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   markItem(item: ItemModel) {
@@ -113,7 +103,7 @@ export class TaskService {
         }
       });
     })
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   deleteItem(item: ItemModel) {
@@ -129,7 +119,7 @@ export class TaskService {
       tempList.push(l);
     });
     this.lists = tempList;
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   // SORT FUNCTION
@@ -145,7 +135,7 @@ export class TaskService {
       current = this.lists.indexOf(event.container.data);
       transferArrayItem(this.lists[previous].data, this.lists[current].data, event.previousIndex, event.currentIndex);
     }
-    switch (this._settings.getSettings().SORT_MODE) {
+    switch (this.setting.SORT_MODE) {
       case SortModeEnum.BY_CREATED: {
         this.sortByTime(current)
         break;
@@ -156,7 +146,7 @@ export class TaskService {
       }
     }
 
-    this._action.syncData(this._settings.getSettings(), this.lists, (data: Array<BoardModel>) => this.updateTasks(data));
+    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
   }
 
   sortByTime(current: number) {

@@ -26,6 +26,8 @@ export class SettingsService {
 
     setSettings(newSettings: SettingsModel) {
         this.settings = newSettings;
+        this._action.writeLocalSetting(this.settings);
+        this.applySetting();
     }
 
     resetSettings() {
@@ -47,14 +49,14 @@ export class SettingsService {
         } else {
             this.settings = local;
         }
-        // this.applySetting();
+        this.applySetting();
     }
 
     // APPLY SETTING SECTION
 
-    // applySetting() {
-    //     this._action.applyStorageMode(this.settings);
-    //     this._action.applySortMode(this.settings);
-    // }
+    applySetting() {
+        this._action.applyStorageMode(this.settings);
+        this._action.applySortMode(this.settings);
+    }
 
 }
