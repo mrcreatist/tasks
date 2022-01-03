@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
   updateBoardList() {
     this.boards = [];
-    this._task.getList()?.forEach((item: BoardModel) => this.boards.push(item))
+    this._task.getList()?.forEach((item: BoardModel) => this.boards.push(item));
   }
 
   addNewSection() {
@@ -58,7 +58,7 @@ export class HeaderComponent implements OnInit {
 
   hasBoard() {
     this.updateBoardList();
-    return this.boards.length
+    return this.boards.length;
   }
 
   openSettings() {
@@ -69,6 +69,6 @@ export class HeaderComponent implements OnInit {
         this._snackBar.open(res);
         setTimeout(() => this._snackBar.dismiss(), 3000);
       }
-    })
+    });
   }
 }

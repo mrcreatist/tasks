@@ -2,16 +2,7 @@
   <span>Tasks</span>
   <span class="spacer"></span>
   <mat-icon class="setting" (click)="openSettings()">settings</mat-icon>
-  <ng-container *ngIf="hasBoard()">
-    <button mat-flat-button class="button right_btn" [matMenuTriggerFor]="board">
-      <mat-icon>add</mat-icon> Task
-    </button>
-    <mat-menu #board="matMenu">
-      <button *ngFor="let board of boardList()" mat-menu-item (click)="addTask(board)">
-        <h4>{{board.name}}</h4>
-      </button>
-    </mat-menu>
-  </ng-container>
+  <ng-container *ngIf="hasBoard()" [ngTemplateOutlet]="tasksAction"></ng-container>
   <button mat-flat-button class="button right_btn" (click)="addNewSection()">
     <mat-icon>add</mat-icon> Board
   </button>
@@ -19,3 +10,14 @@
     <mat-icon>logout</mat-icon> logout
   </button>
 </mat-toolbar>
+
+<ng-template #tasksAction>
+  <button mat-flat-button class="button right_btn" [matMenuTriggerFor]="board">
+    <mat-icon>add</mat-icon> Task
+  </button>
+  <mat-menu #board="matMenu">
+    <button *ngFor="let board of boardList()" mat-menu-item (click)="addTask(board)">
+      <h4>{{board.name}}</h4>
+    </button>
+  </mat-menu>
+</ng-template>
