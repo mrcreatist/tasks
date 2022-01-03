@@ -12,9 +12,9 @@ export class SocketService {
   private socket: any;
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  initializeSocket(success: Function) {
+  initializeSocket(callback: Function) {
     this.socket = io(`${environment.socket.URL}`);
-    this.socket.on(SOCKET_EVENT.fireInTheHole, (res: Array<BoardModel>) => success(res));
+    this.socket.on(SOCKET_EVENT.fireInTheHole, (res: Array<BoardModel>) => callback(res));
   }
 
   sendData(data: Array<BoardModel>) {
