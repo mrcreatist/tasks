@@ -29,13 +29,20 @@ export class BoardComponent implements OnInit {
   }
 
   attachListener() {
-    this.socket.on(SOCKET_EVENT.READ, (data: any) => console.log(data));
+    this.socket.on(SOCKET_EVENT.READ, (data: Array<BoardModel>) => {
+      this.task.write(data);
+    });
   }
 
   subscribeNotification() {
     this.task.getNotificationInstance().subscribe(item => {
+      console.log(item);
       if (item) {
-        this.socket.emit(SOCKET_EVENT.CREATE, item);
+        if (Array.isArray(item)) {
+          this.lists = item;
+        } else if (typeof item === 'object') {
+          this.socket.emit(SOCKET_EVENT.CREATE, item);
+        }
       }
     });
   }

@@ -1,5 +1,5 @@
 import { AddItemComponent, AddSectionComponent, SettingsComponent, PageComponent, SectionComponent, ItemComponent, HeaderComponent, WelcomeComponent, BoardComponent } from './component';
-import { TaskService, SettingsService, StorageService } from './service';
+import { TaskService, SettingsService } from './service';
 
 export const dialogs = [
   AddItemComponent,
@@ -19,6 +19,5 @@ export const components = [
 
 export const providers = [
   TaskService,
-  SettingsService,
-  StorageService
+  SettingsService
 ]

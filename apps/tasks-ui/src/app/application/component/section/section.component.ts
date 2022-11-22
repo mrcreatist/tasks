@@ -20,57 +20,57 @@ export class SectionComponent {
   @Input() list: BoardModel;
 
   constructor (
-    private _task: TaskService,
+    private task: TaskService,
     private dialog: MatDialog
   ) { }
 
-  // addNewItem() {
-  //   this.dialog.open(AddItemComponent, {
-  //     width: '250px'
-  //   }).afterClosed().subscribe((result: ItemDataModel) => {
-  //     if (result) {
-  //       this._task.addItem(this.list.id, result)
-  //     }
-  //   });
-  // }
+  addNewItem() {
+    this.dialog.open(AddItemComponent, {
+      width: '250px'
+    }).afterClosed().subscribe((result: ItemDataModel) => {
+      if (result) {
+        this.task.addItem(this.list.id, result)
+      }
+    });
+  }
 
-  // updateItem(item: ItemModel) {
-  //   this.dialog.open(AddItemComponent, {
-  //     width: '250px', data: item
-  //   }).afterClosed().subscribe(result => {
-  //     if (result) {
-  //       this._task.updateItem(item, result);
-  //     }
-  //   });
-  // }
+  updateItem(item: ItemModel) {
+    // this.dialog.open(AddItemComponent, {
+    //   width: '250px', data: item
+    // }).afterClosed().subscribe(result => {
+    //   if (result) {
+    //     this.task.updateItem(item, result);
+    //   }
+    // });
+  }
 
-  // private _renameSection() {
-  //   this.dialog.open(AddSectionComponent, {
-  //     width: '250px', data: this.list
-  //   }).afterClosed().subscribe((result: string) => {
-  //     if (result) {
-  //       this._task.renameSection(this.list, result);
-  //     }
-  //   });
-  // }
+  private _renameSection() {
+    // this.dialog.open(AddSectionComponent, {
+    //   width: '250px', data: this.list
+    // }).afterClosed().subscribe((result: string) => {
+    //   if (result) {
+    //     this.task.renameSection(this.list, result);
+    //   }
+    // });
+  }
 
-  // private _deleteSection() {
-  //   this._task.deleteSection(this.list);
-  // }
+  private _deleteSection() {
+    // this.task.deleteSection(this.list);
+  }
 
-  // drop(event: any) {
-  //   this._task.drop(event);
-  // }
+  drop(event: any) {
+    // this.task.drop(event);
+  }
 
-  // onAction(action: string) {
-  //   switch (action) {
-  //     case this.ACTION.DELETE:
-  //       this._deleteSection();
-  //       break;
-  //     case this.ACTION.RENAME:
-  //       this._renameSection();
-  //       break;
-  //   }
-  // }
+  onAction(action: string) {
+    switch (action) {
+      case this.ACTION.DELETE:
+        this._deleteSection();
+        break;
+      case this.ACTION.RENAME:
+        this._renameSection();
+        break;
+    }
+  }
 
 }

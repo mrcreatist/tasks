@@ -3,8 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BoardModel } from '@libs/shared';
 import { TaskService } from '../../service';
-import { SettingsComponent } from '../settings';
-import { AddItemComponent } from '../add-item';
 import { AddSectionComponent } from '../add-section';
 
 @Component({
@@ -36,7 +34,7 @@ export class HeaderComponent implements OnInit {
       width: '250px'
     }).afterClosed().subscribe((result: string) => {
       if (result) {
-        this._task.SECTION.add(result);
+        this._task.SECTION.create(result);
       }
     });
   }
