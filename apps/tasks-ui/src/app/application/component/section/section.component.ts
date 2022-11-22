@@ -29,7 +29,7 @@ export class SectionComponent {
       width: '250px'
     }).afterClosed().subscribe((result: ItemDataModel) => {
       if (result) {
-        this.task.addItem(this.list.id, result)
+        this.task.ITEM.addItem(this.list.id, result)
       }
     });
   }
