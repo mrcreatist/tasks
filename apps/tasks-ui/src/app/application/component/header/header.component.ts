@@ -23,52 +23,52 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.updateBoardList();
+    // this.updateBoardList();
   }
 
-  updateBoardList() {
-    this.boards = [];
-    this._task.getList()?.forEach((item: BoardModel) => this.boards.push(item));
-  }
+  // updateBoardList() {
+  //   this.boards = [];
+  //   // this._task.getList()?.forEach((item: BoardModel) => this.boards.push(item));
+  // }
 
   addNewSection() {
     this.dialog.open(AddSectionComponent, {
       width: '250px'
     }).afterClosed().subscribe((result: string) => {
       if (result) {
-        this._task.addSection(result);
+        this._task.SECTION.add(result);
       }
     });
   }
 
-  boardList(): Array<BoardModel> {
-    this.updateBoardList();
-    return this.boards;
-  }
+  // boardList(): Array<BoardModel> {
+  //   this.updateBoardList();
+  //   return this.boards;
+  // }
 
-  addTask(board: BoardModel) {
-    this.dialog.open(AddItemComponent, {
-      width: '250px'
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        this._task.addItem(board.id, result)
-      }
-    });
-  }
+  // addTask(board: BoardModel) {
+  //   this.dialog.open(AddItemComponent, {
+  //     width: '250px'
+  //   }).afterClosed().subscribe(result => {
+  //     if (result) {
+  //       this._task.addItem(board.id, result)
+  //     }
+  //   });
+  // }
 
   hasBoard() {
-    this.updateBoardList();
+    // this.updateBoardList();
     return this.boards.length;
   }
 
-  openSettings() {
-    this.dialog.open(SettingsComponent, {
-      width: '500px'
-    }).afterClosed().subscribe(res => {
-      if (res) {
-        this._snackBar.open(res);
-        setTimeout(() => this._snackBar.dismiss(), 3000);
-      }
-    });
-  }
+  // openSettings() {
+  //   this.dialog.open(SettingsComponent, {
+  //     width: '500px'
+  //   }).afterClosed().subscribe(res => {
+  //     if (res) {
+  //       this._snackBar.open(res);
+  //       setTimeout(() => this._snackBar.dismiss(), 3000);
+  //     }
+  //   });
+  // }
 }

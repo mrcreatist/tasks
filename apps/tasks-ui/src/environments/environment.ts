@@ -1,6 +1,6 @@
 export const environment = {
   socket: {
-    URL: 'localhost:3333'
+    URL: 'ws://localhost:3333'
   },
   production: false
 };

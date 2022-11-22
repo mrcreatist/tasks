@@ -1,170 +1,171 @@
 import { Injectable } from '@angular/core';
-import { ItemModel, BoardModel, ItemDataModel, SortModeEnum, SettingsModel } from '@libs/shared';
+import { ItemModel, BoardModel, ItemDataModel, SOCKET_EVENT } from '@libs/shared';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { ActionService } from './action.service';
-import { SettingsService } from './settings.service';
+import { StorageService } from './storage.service';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
-  private lists: Array<BoardModel> = [];
-  private setting: SettingsModel;
+  notify = new BehaviorSubject<any>(null);
 
   constructor (
-    private _action: ActionService,
-    private _settings: SettingsService
-  ) {
-    this.setting = this._settings.getSettings();
-    this.update(this._action.getData())
+    private storage: StorageService
+  ) { }
+
+  SECTION = {
+    add: (name: string) => {
+      const section: BoardModel = {
+        id: this._getId(),
+        name: name,
+        data: [],
+        created: this.getTimeStamp()
+      };
+      // const list = this.getList();
+      // list.push(section);
+      // this._action.writeTasks(list)
+      // this._action.syncData(list);
+      // this.SOCKET_OPERATION[SOCKET_EVENT.CREATE](section);
+
+      this.newItem(section);
+      // this.socket.emit(SOCKET_EVENT.CREATE, section);
+    },
+    // delete: (item: BoardModel) => {
+    //   let list = this.getList();
+    //   const tempList: Array<BoardModel> = [];
+    //   list.forEach((l: BoardModel) => {
+    //     if (l.id !== item.id) {
+    //       tempList.push(l);
+    //     }
+    //   });
+    //   list = tempList;
+    //   // this._action.syncData(list);
+    // },
+    // rename: (item: BoardModel, newName: string) => {
+    //   const list = this.getList();
+    //   list.forEach((l: BoardModel) => {
+    //     if (l.id === item.id) {
+    //       l.name = newName;
+    //       l.created = this.getTimeStamp();
+    //     }
+    //   });
+    //   // this._action.syncData(list);
+    // }
   }
 
-  update(data: Array<BoardModel>) {
-    this._action.storageTemplate(
-      this.setting,
-      () => this.lists = this._action.readLocalTasks() ? this._action.readLocalTasks() : [],
-      () => this.lists = (data === null ? [] : data));
-  }
+  // ITEM = {
+  //   addItem: (id: number, item: ItemDataModel) => {
+  //     const list = this.getList();
+  //     const data: ItemModel = {
+  //       id: this._getId(),
+  //       title: item.title,
+  //       description: item.description,
+  //       completed: false,
+  //       created: this.getTimeStamp()
+  //     };
+  //     list.find((e: BoardModel) => e.id === id)?.data.push(data)
 
-  // BOARD OPERATIONS
+  //     // if (this.setting.SORT_MODE === SortModeEnum.BY_CREATED) {
+  //     //   const element = list.find((e: BoardModel) => e.id === id);
+  //     //   if (element) {
+  //     //     const current = list.indexOf(element);
+  //     //     this.sortByTime(current);
+  //     //   }
+  //     // }
 
-  addSection(name: string) {
-    const section: BoardModel = {
-      id: this._getId(),
-      name: name,
-      data: [],
-      created: this.getTimeStamp()
-    };
-    this.lists.push(section);
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
+  //     // this._action.syncData(list);
+  //   },
+  //   markItem: (item: ItemModel) => {
+  //     const list = this.getList();
+  //     list.forEach((l: BoardModel) => {
+  //       l.data.forEach((i: ItemModel) => {
+  //         if (i.id === item.id) {
+  //           i.completed = !i.completed;
+  //         }
+  //       })
+  //     })
+  //   },
+  //   updateItem: (item: ItemModel, newItem: ItemDataModel) => {
+  //     const list = this.getList();
+  //     list.forEach((l: BoardModel) => {
+  //       l.data.forEach((i: ItemModel) => {
+  //         if (i.id === item.id) {
+  //           i.title = newItem.title;
+  //           i.description = newItem.description;
+  //           i.created = this.getTimeStamp();
+  //         }
+  //       });
+  //     })
+  //     // this._action.syncData(list);
+  //   },
+  //   deleteItem: (item: ItemModel) => {
+  //     let list = this.getList();
+  //     const tempList: Array<BoardModel> = [];
+  //     list.forEach((l: BoardModel) => {
+  //       const tempItems: Array<ItemModel> = [];
+  //       l.data.forEach((i: ItemModel) => {
+  //         if (i.id !== item.id) {
+  //           tempItems.push(i);
+  //         }
+  //       });
+  //       l.data = tempItems;
+  //       tempList.push(l);
+  //     });
+  //     list = tempList;
+  //     // this._action.syncData(list);
+  //   }
+  // }
 
-  deleteSection(list: BoardModel) {
-    const tempList: Array<BoardModel> = [];
-    this.lists.forEach((l: BoardModel) => {
-      if (l.id !== list.id) {
-        tempList.push(l);
-      }
-    });
-    this.lists = tempList;
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
+  // drop(event: any) {
+  //   let previous, current;
+  //   const list = this.getList();
+  //   if (event.previousContainer === event.container) {
+  //     current = list.indexOf(event.container.data);
+  //     moveItemInArray(list[current].data, event.previousIndex, event.currentIndex);
+  //   } else {
+  //     previous = list.indexOf(event.previousContainer.data);
+  //     current = list.indexOf(event.container.data);
+  //     transferArrayItem(list[previous].data, list[current].data, event.previousIndex, event.currentIndex);
+  //   }
+  //   // switch (this.setting.SORT_MODE) {
+  //   //   case SortModeEnum.BY_CREATED: {
+  //   //     this.sortByTime(current)
+  //   //     break;
+  //   //   }
+  //   //   case SortModeEnum.FREE_FALL:
+  //   //   default: {
+  //   //     break;
+  //   //   }
+  //   // }
+  //   // this._action.syncData(list);
+  // }
 
-  renameSection(list: BoardModel, newName: string) {
-    this.lists.forEach((l: BoardModel) => {
-      if (l.id === list.id) {
-        l.name = newName;
-        l.created = this.getTimeStamp();
-      }
-    });
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
+  // sortByTime(current: number) {
+  //   const list = this.getList();
+  //   list[current].data.sort((a, b) => b.created - a.created);
+  // }
 
-  // TASK OPERATIONS
-
-  addItem(id: number, item: ItemDataModel) {
-    const data: ItemModel = {
-      id: this._getId(),
-      title: item.title,
-      description: item.description,
-      completed: false,
-      created: this.getTimeStamp()
-    };
-    this.lists.find((e: BoardModel) => e.id === id)?.data.push(data)
-
-    if (this.setting.SORT_MODE === SortModeEnum.BY_CREATED) {
-      const element = this.lists.find((e: BoardModel) => e.id === id);
-      if (element) {
-        const current = this.lists.indexOf(element);
-        this.sortByTime(current);
-      }
-    }
-
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
-
-  markItem(item: ItemModel) {
-    this.lists.forEach((l: BoardModel) => {
-      l.data.forEach((i: ItemModel) => {
-        if (i.id === item.id) {
-          i.completed = !i.completed;
-        }
-      })
-    })
-  }
-
-  updateItem(item: ItemModel, newItem: ItemDataModel) {
-    this.lists.forEach((l: BoardModel) => {
-      l.data.forEach((i: ItemModel) => {
-        if (i.id === item.id) {
-          i.title = newItem.title;
-          i.description = newItem.description;
-          i.created = this.getTimeStamp();
-        }
-      });
-    })
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
-
-  deleteItem(item: ItemModel) {
-    const tempList: Array<BoardModel> = [];
-    this.lists.forEach((l: BoardModel) => {
-      const tempItems: Array<ItemModel> = [];
-      l.data.forEach((i: ItemModel) => {
-        if (i.id !== item.id) {
-          tempItems.push(i);
-        }
-      });
-      l.data = tempItems;
-      tempList.push(l);
-    });
-    this.lists = tempList;
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
-
-  // SORT FUNCTION
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  drop(event: any) {
-    let previous, current;
-    if (event.previousContainer === event.container) {
-      current = this.lists.indexOf(event.container.data);
-      moveItemInArray(this.lists[current].data, event.previousIndex, event.currentIndex);
-    } else {
-      previous = this.lists.indexOf(event.previousContainer.data);
-      current = this.lists.indexOf(event.container.data);
-      transferArrayItem(this.lists[previous].data, this.lists[current].data, event.previousIndex, event.currentIndex);
-    }
-    switch (this.setting.SORT_MODE) {
-      case SortModeEnum.BY_CREATED: {
-        this.sortByTime(current)
-        break;
-      }
-      case SortModeEnum.FREE_FALL:
-      default: {
-        break;
-      }
-    }
-
-    this._action.syncData(this.setting, this.lists, (data: Array<BoardModel>) => this.update(data));
-  }
-
-  sortByTime(current: number) {
-    this.lists[current].data.sort((a, b) => b.created - a.created);
-  }
-
-  // HELPER FUNCTIONS
+  // // HELPER FUNCTIONS
 
   private _getId() {
     return Math.floor(100000 + Math.random() * 900000);
   }
 
-  getList(): Array<BoardModel> {
-    return this.lists;
-  }
+  // getList(): Array<BoardModel> {
+  //   return []
+  // }
 
   private getTimeStamp(): number {
     return Date.now();
+  }
+
+  newItem(data: BoardModel) {
+    this.notify.next(data);
+  }
+
+  getNotificationInstance() {
+    return this.notify;
   }
 
 }

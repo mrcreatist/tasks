@@ -19,56 +19,56 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this._initializeSettings();
+    // this._initializeSettings();
   }
 
-  private _initializeSettings() {
-    this.settings = this._settings.getSettings();
-  }
+  // private _initializeSettings() {
+  //   this.settings = this._settings.getSettings();
+  // }
 
-  toNormalText(item: string) {
-    return item.toLowerCase().replace('_', ' ');
-  }
+  // toNormalText(item: string) {
+  //   return item.toLowerCase().replace('_', ' ');
+  // }
 
-  getSettingValue(set: keyof SettingsModel) {
-    return this.settings[set].toString();
-  }
+  // getSettingValue(set: keyof SettingsModel) {
+  //   return this.settings[set].toString();
+  // }
 
-  getSettingKey() {
-    return Object.keys(this.settings);
-  }
+  // getSettingKey() {
+  //   return Object.keys(this.settings);
+  // }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getEnum(settingKey: string): any {
-    const item = this._settings.getTypeEnum(settingKey);
-    return item ? item : null;
-  }
+  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // getEnum(settingKey: string): any {
+  //   const item = this._settings.getTypeEnum(settingKey);
+  //   return item ? item : null;
+  // }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getEnumKeys(enumObj: any): Array<string> {
-    return Object.keys(enumObj)
-  }
+  // // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // getEnumKeys(enumObj: any): Array<string> {
+  //   return Object.keys(enumObj)
+  // }
 
-  updateSetting(key: keyof SettingsModel, param: MatSelectChange) {
-    this.settings = {
-      ...this.settings,
-      [key]: param.value
-    };
-  }
+  // updateSetting(key: keyof SettingsModel, param: MatSelectChange) {
+  //   this.settings = {
+  //     ...this.settings,
+  //     [key]: param.value
+  //   };
+  // }
 
-  closeDialog(message: string = '') {
-    this.dialogRef.close(message);
-  }
+  // closeDialog(message: string = '') {
+  //   this.dialogRef.close(message);
+  // }
 
-  submit() {
-    this._settings.setSettings(this.settings);
-    this.closeDialog('Settings Saved! 🎉')
-  }
+  // submit() {
+  //   this._settings.setSettings(this.settings);
+  //   this.closeDialog('Settings Saved! 🎉')
+  // }
 
-  reset() {
-    this._settings.resetSettings();
-    this.settings = this._settings.getSettings();
-    this.dialogRef.close('Reset Successful! 🥳');
-  }
+  // reset() {
+  //   this._settings.resetSettings();
+  //   this.settings = this._settings.getSettings();
+  //   this.dialogRef.close('Reset Successful! 🥳');
+  // }
 
 }

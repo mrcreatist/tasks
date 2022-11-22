@@ -23,19 +23,19 @@ export class ItemComponent {
     private _task: TaskService
   ) { }
 
-  onAction(action: string) {
-    switch (action) {
-      case this.ACTION.MARK_AS_DONE:
-      case this.ACTION.MARK_AS_UNDONE:
-        this._task.markItem(this.item);
-        break;
-      case this.ACTION.DELETE:
-        this._task.deleteItem(this.item);
-        break;
-      case this.ACTION.UPDATE:
-        this.update.emit(this.item);
-        break;
-    }
-  }
+  // onAction(action: string) {
+  //   switch (action) {
+  //     case this.ACTION.MARK_AS_DONE:
+  //     case this.ACTION.MARK_AS_UNDONE:
+  //       this._task.markItem(this.item);
+  //       break;
+  //     case this.ACTION.DELETE:
+  //       this._task.deleteItem(this.item);
+  //       break;
+  //     case this.ACTION.UPDATE:
+  //       this.update.emit(this.item);
+  //       break;
+  //   }
+  // }
 
 }

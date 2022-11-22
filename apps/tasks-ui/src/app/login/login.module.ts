@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { LoginRoutingModule } from './login-routing.module';
 import { components, providers } from './declarations';
-import { MaterialModule } from '@libs/shared';
+import { MaterialModule } from '../module';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
