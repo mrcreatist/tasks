@@ -2,8 +2,8 @@ import * as express from "express";
 import * as cors from "cors";
 import * as http from "http";
 import * as SocketIO from 'socket.io';
-import { SOCKET_EVENT } from "@libs/shared";
-import { FILE, SOCKET_ACTION } from "./controller";
+import { BoardModel, SocketBoardPayload, SocketItemPayload, SOCKET_EVENT } from "@libs/shared";
+import { FILE, SocketAction } from "./controller";
 
 export class TaskServer {
   public static readonly PORT: number = 3333;
@@ -39,45 +39,26 @@ export class TaskServer {
   }
 
   private socketListener() {
-    // SOCKET_ROUTE.establish();
-
     this.io.on('connection', (socket) => {
+      // socketAction Instance
+      const socketAction = new SocketAction();
+
+      // notify about new user
       console.log('new connection', socket.id);
 
       // initial file read
-      socket.emit(SOCKET_EVENT.READ, FILE.read());
+      socket.emit(SOCKET_EVENT.SYNC, FILE.read());
 
-      // create
-      socket.on(SOCKET_EVENT.CREATE, (data) => {
-        SOCKET_ACTION[SOCKET_EVENT.CREATE](data);
-        socket.emit(SOCKET_EVENT.READ, FILE.read());
-      });
-
-      //read
-      socket.on(SOCKET_EVENT.READ, () => {
-        console.log('caught event');
-      });
-
-      // update
-      socket.on(SOCKET_EVENT.UPDATE, (data) => {
-        SOCKET_ACTION[SOCKET_EVENT.UPDATE](data);
-        socket.broadcast.emit(SOCKET_EVENT.READ, FILE.read());
-      });
-
-      // delete
-      socket.on(SOCKET_EVENT.DELETE, (data) => {
-        socket.broadcast.emit(SOCKET_EVENT.DELETE, data)
-      });
-
-      // disconnect
-      socket.on(SOCKET_EVENT.DISCONNECT, () => {
-        SOCKET_ACTION.disconnect()
-      });
-
-      // logger
-      socket.onAny((event, ...args) => {
-        console.log(event, args);
-      })
+      socket.on(SOCKET_EVENT.CREATE_BOARD, (data: SocketBoardPayload) => socketAction[SOCKET_EVENT.CREATE_BOARD](socket, data));
+      socket.on(SOCKET_EVENT.UPDATE_BOARD, (data: SocketBoardPayload) => socketAction[SOCKET_EVENT.UPDATE_BOARD](socket, data));
+      socket.on(SOCKET_EVENT.DELETE_BOARD, (data: SocketBoardPayload) => socketAction[SOCKET_EVENT.DELETE_BOARD](socket, data));
+      socket.on(SOCKET_EVENT.CREATE_TASK, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.CREATE_TASK](socket, data));
+      socket.on(SOCKET_EVENT.UPDATE_TASK, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.UPDATE_TASK](socket, data));
+      socket.on(SOCKET_EVENT.DELETE_TASK, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.DELETE_TASK](socket, data));
+      socket.on(SOCKET_EVENT.MARK_TOGGLE, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.MARK_TOGGLE](socket, data));
+      socket.on(SOCKET_EVENT.SYNC, (data: Array<BoardModel>) => socketAction[SOCKET_EVENT.SYNC](socket, data));
+      socket.on(SOCKET_EVENT.DISCONNECT, () => socketAction.disconnect());
+      socket.onAny((event, ...args) => console.log(event, args))
     });
   }
 

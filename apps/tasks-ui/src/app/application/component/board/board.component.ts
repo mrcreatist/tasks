@@ -3,6 +3,7 @@ import { BoardModel, SOCKET_EVENT } from '@libs/shared';
 import { TaskService } from '../../service';
 import { io } from 'socket.io-client';
 import { environment } from '../../../../environments/environment';
+import { NotificationModel } from '../../model';
 
 @Component({
   selector: 'tasks-ui-board',
@@ -29,19 +30,17 @@ export class BoardComponent implements OnInit {
   }
 
   attachListener() {
-    this.socket.on(SOCKET_EVENT.READ, (data: Array<BoardModel>) => {
-      this.task.write(data);
-    });
+    this.socket.on(SOCKET_EVENT.SYNC, (data: Array<BoardModel>) => this.task.write(data));
   }
 
   subscribeNotification() {
-    this.task.getNotificationInstance().subscribe(item => {
-      console.log(item);
-      if (item) {
-        if (Array.isArray(item)) {
-          this.lists = item;
-        } else if (typeof item === 'object') {
-          this.socket.emit(SOCKET_EVENT.CREATE, item);
+    this.task.listenNotification().subscribe((notification: NotificationModel<any>) => {
+      console.log(notification);
+      if (notification.data) {
+        if (notification.action === null) {
+          this.lists = <Array<BoardModel>>notification.data;
+        } else {
+          this.socket.emit(notification.action, notification.data);
         }
       }
     });

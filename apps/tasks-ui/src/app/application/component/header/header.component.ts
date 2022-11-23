@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BoardModel } from '@libs/shared';
 import { TaskService } from '../../service';
+import { AddItemComponent } from '../add-item';
 import { AddSectionComponent } from '../add-section';
 
 @Component({
@@ -16,7 +17,7 @@ export class HeaderComponent implements OnInit {
 
   constructor (
     private dialog: MatDialog,
-    private _task: TaskService,
+    private task: TaskService,
     private _snackBar: MatSnackBar
   ) { }
 
@@ -34,29 +35,24 @@ export class HeaderComponent implements OnInit {
       width: '250px'
     }).afterClosed().subscribe((result: string) => {
       if (result) {
-        this._task.SECTION.create(result);
+        this.task.section.create(result);
       }
     });
   }
 
-  // boardList(): Array<BoardModel> {
-  //   this.updateBoardList();
-  //   return this.boards;
-  // }
+  boardList(): Array<BoardModel> {
+    return this.task.read();
+  }
 
-  // addTask(board: BoardModel) {
-  //   this.dialog.open(AddItemComponent, {
-  //     width: '250px'
-  //   }).afterClosed().subscribe(result => {
-  //     if (result) {
-  //       this._task.addItem(board.id, result)
-  //     }
-  //   });
-  // }
-
-  hasBoard() {
-    // this.updateBoardList();
-    return this.boards.length;
+  addTask(board: BoardModel) {
+    this.dialog.open(AddItemComponent, {
+      width: '250px'
+    }).afterClosed().subscribe(result => {
+      if (result) {
+        console.log(result);
+        // this._task.addItem(board.id, result)
+      }
+    });
   }
 
   // openSettings() {

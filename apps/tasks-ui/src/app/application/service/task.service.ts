@@ -1,64 +1,55 @@
 import { Injectable } from '@angular/core';
-import { ItemModel, BoardModel, ItemDataModel, SOCKET_EVENT } from '@libs/shared';
-import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { ItemModel, BoardModel, ItemDataModel, SOCKET_EVENT, SocketBoardPayload, SocketItemPayload } from '@libs/shared';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { BehaviorSubject } from 'rxjs';
+import { NotificationModel } from '../model';
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
 
-  notify = new BehaviorSubject<any>(null);
+  notify = new BehaviorSubject<NotificationModel<null>>({
+    action: null,
+    data: null
+  });
 
   private dataKey = 'data';
 
-  SECTION = {
+  section = {
     create: (name: string) => {
-      const section: BoardModel = {
-        id: this._getId(),
-        name: name,
-        data: [],
-        created: this.getTimeStamp()
-      };
-      this.newItem(section);
+      this.newItem(<NotificationModel<SocketBoardPayload>>{
+        action: SOCKET_EVENT.CREATE_BOARD,
+        data: {
+          id: NaN,
+          name: name
+        }
+      });
     },
-    update: (item: BoardModel) => {
-      // this.newItem(item);
+    update: (sectionId: number, name: string) => {
+      this.newItem(<NotificationModel<SocketBoardPayload>>{
+        action: SOCKET_EVENT.UPDATE_BOARD,
+        data: {
+          id: sectionId,
+          name: name
+        }
+      });
     },
-
-    // rename: (item: BoardModel, newName: string) => {
-    //   const list = this.read();
-    //   list.forEach((l: BoardModel) => {
-    //     if (l.id === item.id) {
-    //       l.name = newName;
-    //       l.created = this.getTimeStamp();
-    //     }
-    //   });
-    //   // this._action.syncData(list);
-    // }
-    // delete: (item: BoardModel) => {
-    //   let list = this.read();
-    //   const tempList: Array<BoardModel> = [];
-    //   list.forEach((l: BoardModel) => {
-    //     if (l.id !== item.id) {
-    //       tempList.push(l);
-    //     }
-    //   });
-    //   list = tempList;
-    //   // this._action.syncData(list);
-    // },
+    delete: (section: BoardModel) => {
+      this.newItem(<NotificationModel<SocketBoardPayload>>{
+        action: SOCKET_EVENT.DELETE_BOARD,
+        data: {
+          id: section.id
+        }
+      })
+    },
   }
 
-  ITEM = {
-    addItem: (id: number, item: ItemDataModel) => {
-      const list = this.read();
-      const data: ItemModel = {
-        id: this._getId(),
-        title: item.title,
-        description: item.description,
-        completed: false,
-        created: this.getTimeStamp()
-      };
-      list.find((e: BoardModel) => e.id === id)?.data.push(data)
+  item = {
+    create: (boardId: number, title: string, description: string) => {
+      this.newItem(<NotificationModel<SocketItemPayload>>{
+        action: SOCKET_EVENT.CREATE_TASK,
+        data: { boardId, title, description }
+      })
 
       // if (this.setting.SORT_MODE === SortModeEnum.BY_CREATED) {
       //   const element = list.find((e: BoardModel) => e.id === id);
@@ -67,72 +58,50 @@ export class TaskService {
       //     this.sortByTime(current);
       //   }
       // }
-
-      // this._action.syncData(list);
     },
-    // markItem: (item: ItemModel) => {
-    //   const list = this.read();
-    //   list.forEach((l: BoardModel) => {
-    //     l.data.forEach((i: ItemModel) => {
-    //       if (i.id === item.id) {
-    //         i.completed = !i.completed;
-    //       }
-    //     })
-    //   })
-    // },
-    // updateItem: (item: ItemModel, newItem: ItemDataModel) => {
-    //   const list = this.read();
-    //   list.forEach((l: BoardModel) => {
-    //     l.data.forEach((i: ItemModel) => {
-    //       if (i.id === item.id) {
-    //         i.title = newItem.title;
-    //         i.description = newItem.description;
-    //         i.created = this.getTimeStamp();
-    //       }
-    //     });
-    //   })
-    //   // this._action.syncData(list);
-    // },
-    // deleteItem: (item: ItemModel) => {
-    //   let list = this.read();
-    //   const tempList: Array<BoardModel> = [];
-    //   list.forEach((l: BoardModel) => {
-    //     const tempItems: Array<ItemModel> = [];
-    //     l.data.forEach((i: ItemModel) => {
-    //       if (i.id !== item.id) {
-    //         tempItems.push(i);
-    //       }
-    //     });
-    //     l.data = tempItems;
-    //     tempList.push(l);
-    //   });
-    //   list = tempList;
-    //   // this._action.syncData(list);
-    // }
+    update: (boardId: number, taskId: number, task: ItemDataModel) => {
+      this.newItem(<NotificationModel<SocketItemPayload>>{
+        action: SOCKET_EVENT.UPDATE_TASK,
+        data: {
+          boardId,
+          id: taskId,
+          ...task
+        }
+      })
+    },
+    delete: (boardId: number, taskId: number) => {
+      this.newItem(<NotificationModel<SocketItemPayload>>{
+        action: SOCKET_EVENT.DELETE_TASK,
+        data: {
+          boardId,
+          id: taskId
+        }
+      })
+    },
+    markToggle: (boardId: number, taskId: number) => {
+      this.newItem(<NotificationModel<SocketItemPayload>>{
+        action: SOCKET_EVENT.MARK_TOGGLE,
+        data: {
+          boardId: boardId,
+          id: taskId
+        }
+      })
+    },
   }
 
-  drop(event: any) {
-    let previous, current;
-    const list = this.read();
+  drop(event: CdkDragDrop<BoardModel>) {
+    const boards = this.read();
+    const previous = boards.findIndex((board: BoardModel) => board.id === event.previousContainer.data.id);
+    const current = boards.findIndex((board: BoardModel) => board.id === event.container.data.id);
     if (event.previousContainer === event.container) {
-      current = list.indexOf(event.container.data);
-      moveItemInArray(list[current].data, event.previousIndex, event.currentIndex);
+      moveItemInArray(boards[current].data, event.previousIndex, event.currentIndex);
     } else {
-      previous = list.indexOf(event.previousContainer.data);
-      current = list.indexOf(event.container.data);
-      transferArrayItem(list[previous].data, list[current].data, event.previousIndex, event.currentIndex);
+      transferArrayItem(boards[previous].data, boards[current].data, event.previousIndex, event.currentIndex);
     }
-    // switch (this.setting.SORT_MODE) {
-    //   case SortModeEnum.BY_CREATED: {
-    //     this.sortByTime(current)
-    //     break;
-    //   }
-    //   case SortModeEnum.FREE_FALL:
-    //   default: {
-    //     break;
-    //   }
-    // }
-    // this._action.syncData(list);
+    this.newItem({
+      action: SOCKET_EVENT.SYNC,
+      data: boards
+    });
   }
 
   sortByTime(current: number) {
@@ -140,31 +109,24 @@ export class TaskService {
     // list[current].data.sort((a, b) => b.created - a.created);
   }
 
-  // HELPER FUNCTIONS
-
-  private _getId() {
-    return Math.floor(100000 + Math.random() * 900000);
-  }
-
   // getList(): Array<BoardModel> {
   //   return []
   // }
 
-  private getTimeStamp(): number {
-    return Date.now();
+  newItem(notification: NotificationModel<any>) {
+    this.notify.next(notification);
   }
 
-  newItem(data: BoardModel) {
-    this.notify.next(data);
-  }
-
-  getNotificationInstance() {
+  listenNotification() {
     return this.notify;
   }
 
-  write(data: any) {
+  write(data: Array<BoardModel>) {
     localStorage.setItem(this.dataKey, JSON.stringify(data) ?? null);
-    this.newItem(this.read());
+    this.newItem({
+      action: null,
+      data: this.read()
+    });
   }
 
   read() {

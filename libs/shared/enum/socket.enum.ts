@@ -1,7 +1,14 @@
 export enum SOCKET_EVENT {
   DISCONNECT = 'disconnect',
-  CREATE = 'createTask',
-  UPDATE = 'updateTask',
-  READ = 'readTask',
-  DELETE = 'deleteTask'
+
+  SYNC = 'sync',
+  MARK_TOGGLE = 'markToggle',
+
+  CREATE_BOARD = 'createBoard',
+  UPDATE_BOARD = 'updateBoard',
+  DELETE_BOARD = 'deleteBoard',
+
+  CREATE_TASK = 'createTask',
+  UPDATE_TASK = 'updateTask',
+  DELETE_TASK = 'deleteTask',
 }

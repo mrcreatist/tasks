@@ -4,6 +4,7 @@ import { ItemModel, BoardModel, ItemDataModel } from '@libs/shared';
 import { AddItemComponent } from '../add-item';
 import { TaskService } from '../../service';
 import { AddSectionComponent } from '../add-section';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'tasks-ui-section',
@@ -17,7 +18,7 @@ export class SectionComponent {
     RENAME: 'Rename'
   }
 
-  @Input() list: BoardModel;
+  @Input() board: BoardModel;
 
   constructor (
     private task: TaskService,
@@ -27,48 +28,56 @@ export class SectionComponent {
   addNewItem() {
     this.dialog.open(AddItemComponent, {
       width: '250px'
-    }).afterClosed().subscribe((result: ItemDataModel) => {
-      if (result) {
-        this.task.ITEM.addItem(this.list.id, result)
+    }).afterClosed().subscribe((task: ItemDataModel) => {
+      if (task) {
+        this.task.item.create(this.board.id, <string>task.title, <string>task.description)
       }
     });
   }
 
-  updateItem(item: ItemModel) {
-    // this.dialog.open(AddItemComponent, {
-    //   width: '250px', data: item
-    // }).afterClosed().subscribe(result => {
-    //   if (result) {
-    //     this.task.updateItem(item, result);
-    //   }
-    // });
+  updateTask(item: ItemModel) {
+    this.dialog.open(AddItemComponent, {
+      width: '250px', data: item
+    }).afterClosed().subscribe((task: ItemDataModel) => {
+      if (task) {
+        this.task.item.update(this.board.id, item.id, task);
+      }
+    });
   }
 
-  private _renameSection() {
-    // this.dialog.open(AddSectionComponent, {
-    //   width: '250px', data: this.list
-    // }).afterClosed().subscribe((result: string) => {
-    //   if (result) {
-    //     this.task.renameSection(this.list, result);
-    //   }
-    // });
+  deleteTask(taskId: number) {
+    this.task.item.delete(this.board.id, taskId);
   }
 
-  private _deleteSection() {
-    // this.task.deleteSection(this.list);
+  markToggleTask(taskId: number) {
+    this.task.item.markToggle(this.board.id, taskId);
   }
 
-  drop(event: any) {
-    // this.task.drop(event);
+  drop(event: CdkDragDrop<BoardModel>) {
+    this.task.drop(event);
+  }
+
+  private rename() {
+    this.dialog.open(AddSectionComponent, {
+      width: '250px', data: this.board
+    }).afterClosed().subscribe((newName: string) => {
+      if (newName) {
+        this.task.section.update(this.board.id, newName);
+      }
+    });
+  }
+
+  private delete() {
+    this.task.section.delete(this.board);
   }
 
   onAction(action: string) {
     switch (action) {
       case this.ACTION.DELETE:
-        this._deleteSection();
+        this.delete();
         break;
       case this.ACTION.RENAME:
-        this._renameSection();
+        this.rename();
         break;
     }
   }
