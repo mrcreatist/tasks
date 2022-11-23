@@ -9,88 +9,58 @@ export class SocketAction {
   // BOARD
 
   [SOCKET_EVENT.CREATE_BOARD](socket, data: SocketBoardPayload) {
-    const section: BoardModel = {
-      id: this.getId(),
-      name: data.name,
-      data: [],
-      created: this.getTimeStamp()
-    };
-    const fileData: Array<BoardModel> = FILE.read();
-    fileData.push(section);
-    FILE.write(fileData);
+    const section: BoardModel = this.boardObject(data);
+    this.dataSnapshot((fileData: Array<BoardModel>) => fileData.push(section));
     this.echo(socket);
   }
 
   [SOCKET_EVENT.UPDATE_BOARD](socket, data: SocketBoardPayload) {
-    const fileData: Array<BoardModel> = FILE.read();
-    const index = fileData.findIndex((item: BoardModel) => item.id === data.id)
-    index > -1 ? fileData[index].name = data.name : null;
-    FILE.write(fileData);
+    this.dataSnapshot((fileData: Array<BoardModel>) => this.hunt(fileData, 'id', data.id, (board: BoardModel) => board.name = data.name))
     this.echo(socket)
   }
 
   [SOCKET_EVENT.DELETE_BOARD](socket, data: SocketBoardPayload) {
-    const fileData: Array<BoardModel> = FILE.read();
-    const index = fileData.findIndex((item: BoardModel) => item.id === data.id)
-    fileData.splice(index, 1);
-    FILE.write(fileData);
+    this.dataSnapshot((fileData: Array<BoardModel>) => this.hunt(fileData, 'id', data.id, (board) => fileData.splice(this.findGlobalIndex(board.id), 1)));
     this.echo(socket);
   }
 
   // TASK
 
   [SOCKET_EVENT.CREATE_TASK](socket, data: SocketItemPayload) {
-    const task: ItemModel = {
-      id: this.getId(),
-      title: data.title,
-      description: data.description,
-      completed: false,
-      created: this.getTimeStamp()
-    };
-    const fileData: Array<BoardModel> = FILE.read();
-    const index = fileData.findIndex((item: BoardModel) => item.id === data.boardId);
-    index > -1 ? fileData[index].data.push(task) : null;
-    FILE.write(fileData);
+    const task: ItemModel = this.itemObject(data);
+    this.dataSnapshot((fileData: Array<BoardModel>) => this.hunt(fileData, 'id', data.boardId, (board) => board.data.push(task)));
     this.echo(socket);
   }
 
   [SOCKET_EVENT.UPDATE_TASK](socket, data: SocketItemPayload) {
-    const fileData: Array<BoardModel> = FILE.read();
-    const boardIndex = fileData.findIndex((item: BoardModel) => item.id === data.boardId);
-    if (boardIndex > -1) {
-      const board = fileData[boardIndex];
-      const task = board.data.find(task => task.id === data.id);
-      if (task) {
+    this.dataSnapshot((fileData: Array<BoardModel>) => this.hunt(fileData, 'id', data.boardId, (board) => {
+      this.hunt(board.data, 'id', data.id, (task) => {
         task.title = data.title;
         task.description = data.description;
-      }
-    }
-    FILE.write(fileData);
-    this.echo(socket)
+      })
+    }));
+    this.echo(socket);
   }
 
   [SOCKET_EVENT.DELETE_TASK](socket, data: SocketItemPayload) {
-    const fileData: Array<BoardModel> = FILE.read();
-    const boardIndex = fileData.findIndex((item: BoardModel) => item.id === data.boardId);
-    if (boardIndex > -1) {
-      const board = fileData[boardIndex];
-      const taskIndex = board.data.findIndex(task => task.id === data.id)
-      taskIndex > -1 ? board.data.splice(taskIndex, 1) : null;
-    }
-    FILE.write(fileData);
+    this.dataSnapshot((fileData: Array<BoardModel>) =>
+      this.hunt(fileData, 'id', data.boardId, (board) =>
+        this.hunt(board.data, 'id', data.id, (task) =>
+          board.data.splice(this.findGlobalIndex(task.id), 1)
+        )));
     this.echo(socket);
   }
 
   // MARK TOGGLE
 
   [SOCKET_EVENT.MARK_TOGGLE](socket, data: SocketItemPayload) {
-    const fileData: Array<BoardModel> = FILE.read();
-    const board = fileData.find((item: BoardModel) => item.id === data.boardId);
-    if (board) {
-      const task = board.data.find(task => task.id === data.id);
-      if (task) task.completed = !task.completed;
-    }
-    FILE.write(fileData);
+    this.dataSnapshot((fileData: Array<BoardModel>) => {
+      const board = fileData.find((item: BoardModel) => item.id === data.boardId);
+      if (board) {
+        const task = board.data.find(task => task.id === data.id);
+        if (task) task.completed = !task.completed;
+      }
+    });
     this.echo(socket);
   }
 
@@ -102,6 +72,7 @@ export class SocketAction {
   }
 
   // FINAL ACTION
+
   echo(socket) {
     socket.emit(SOCKET_EVENT.SYNC, FILE.read());
     socket.broadcast.emit(SOCKET_EVENT.SYNC, FILE.read());
@@ -115,5 +86,52 @@ export class SocketAction {
 
   private getTimeStamp(): number {
     return Date.now();
+  }
+
+  private hunt(source, key, identifier, callback: (params) => void) {
+    const item = source.find((item: BoardModel) => item[key] === identifier);
+    if (item) callback(item);
+  }
+
+  private dataSnapshot(callback: (params) => void) {
+    const fileData: Array<BoardModel> = FILE.read();
+    callback(fileData);
+    FILE.write(fileData);
+  }
+
+  private findGlobalIndex(itemId) {
+    const fileData = FILE.read();
+    let index = -1;
+    const boardIndex = fileData.findIndex(board => board.id === itemId);
+    if (boardIndex > -1) {
+      index = boardIndex;
+    } else {
+      fileData.forEach(element => {
+        const task = element.data.findIndex(e => e.id === itemId)
+        if (task > -1) {
+          index = task;
+        }
+      });
+    }
+    return index
+  }
+
+  private boardObject(data: SocketBoardPayload): BoardModel {
+    return <BoardModel>{
+      id: this.getId(),
+      name: data.name,
+      data: [],
+      created: this.getTimeStamp()
+    }
+  }
+
+  private itemObject(data: SocketItemPayload) {
+    return <ItemModel>{
+      id: this.getId(),
+      title: data.title,
+      description: data.description,
+      completed: false,
+      created: this.getTimeStamp()
+    }
   }
 }
