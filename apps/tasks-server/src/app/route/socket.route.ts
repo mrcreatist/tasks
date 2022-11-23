@@ -1,7 +1,5 @@
 import { BoardModel, SocketBoardPayload, SocketItemPayload, SOCKET_EVENT } from "@libs/shared";
-import { FILE, SocketAction } from "../controller";
-
-import * as SocketIO from 'socket.io';
+import { SocketAction } from "../controller";
 
 export class SocketRoute {
   establish(socket) {
