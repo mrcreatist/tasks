@@ -35,7 +35,6 @@ export class BoardComponent implements OnInit {
 
   subscribeNotification() {
     this.task.listenNotification().subscribe((notification: NotificationModel<any>) => {
-      console.log(notification);
       if (notification.data) {
         if (notification.action === null) {
           this.lists = <Array<BoardModel>>notification.data;

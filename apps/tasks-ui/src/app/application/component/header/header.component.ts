@@ -41,7 +41,6 @@ export class HeaderComponent implements OnInit {
   }
 
   addTask(board: BoardModel) {
-    console.log('in here');
     this.dialog.open(AddItemComponent, {
       width: '250px'
     }).afterClosed().subscribe((result: ItemDataModel) => {

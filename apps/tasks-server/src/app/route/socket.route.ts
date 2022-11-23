@@ -1,22 +1,20 @@
-// import { SOCKET_EVENT } from "@libs/shared";
-// import { FILE, SOCKET_ACTION } from "../controller";
+import { BoardModel, SocketBoardPayload, SocketItemPayload, SOCKET_EVENT } from "@libs/shared";
+import { FILE, SocketAction } from "../controller";
 
-// import * as SocketIO from 'socket.io';
+import * as SocketIO from 'socket.io';
 
-export const SOCKET_ROUTE = {
-  //   // establish: () => {
-  //   //   let io: SocketIO.Server;
-  //   //   io.on('connection', (socket) => {
-  //   //     console.log('new connection', socket.id);
-  //   //     socket.emit(SOCKET_EVENT.READ, FILE.read());
-
-  //   //     socket.on(SOCKET_EVENT.READ, () => SOCKET_ACTION.read1());
-  //   //     socket.on(SOCKET_EVENT.CREATE, (data) => {
-  //   //       SOCKET_ACTION.create(data);
-  //   //       const fileData = FILE.read();
-  //   //       socket.broadcast.emit(SOCKET_EVENT.READ, fileData);
-  //   //     });
-  //   //     socket.on(SOCKET_EVENT.DISCONNECT, () => SOCKET_ACTION.disconnect());
-  //   //   });
-  //   // }
+export class SocketRoute {
+  establish(socket) {
+    const socketAction = new SocketAction();
+    socket.on(SOCKET_EVENT.CREATE_BOARD, (data: SocketBoardPayload) => socketAction[SOCKET_EVENT.CREATE_BOARD](socket, data));
+    socket.on(SOCKET_EVENT.UPDATE_BOARD, (data: SocketBoardPayload) => socketAction[SOCKET_EVENT.UPDATE_BOARD](socket, data));
+    socket.on(SOCKET_EVENT.DELETE_BOARD, (data: SocketBoardPayload) => socketAction[SOCKET_EVENT.DELETE_BOARD](socket, data));
+    socket.on(SOCKET_EVENT.CREATE_TASK, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.CREATE_TASK](socket, data));
+    socket.on(SOCKET_EVENT.UPDATE_TASK, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.UPDATE_TASK](socket, data));
+    socket.on(SOCKET_EVENT.DELETE_TASK, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.DELETE_TASK](socket, data));
+    socket.on(SOCKET_EVENT.MARK_TOGGLE, (data: SocketItemPayload) => socketAction[SOCKET_EVENT.MARK_TOGGLE](socket, data));
+    socket.on(SOCKET_EVENT.SYNC, (data: Array<BoardModel>) => socketAction[SOCKET_EVENT.SYNC](socket, data));
+    socket.on(SOCKET_EVENT.DISCONNECT, () => socketAction.disconnect());
+    socket.onAny((event, ...args) => console.log(event, args))
+  }
 }
