@@ -29,9 +29,7 @@ export class SectionComponent {
     this.dialog.open(AddItemComponent, {
       width: '250px'
     }).afterClosed().subscribe((task: ItemDataModel) => {
-      if (task) {
-        this.task.item.create(this.board.id, <string>task.title, <string>task.description)
-      }
+      if (task) this.task.item.create(this.board.id, task);
     });
   }
 
@@ -61,9 +59,7 @@ export class SectionComponent {
     this.dialog.open(AddSectionComponent, {
       width: '250px', data: this.board
     }).afterClosed().subscribe((newName: string) => {
-      if (newName) {
-        this.task.section.update(this.board.id, newName);
-      }
+      if (newName) this.task.section.update(this.board.id, newName);
     });
   }
 

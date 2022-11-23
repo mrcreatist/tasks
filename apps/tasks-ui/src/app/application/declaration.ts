@@ -1,10 +1,9 @@
-import { AddItemComponent, AddSectionComponent, SettingsComponent, PageComponent, SectionComponent, ItemComponent, HeaderComponent, WelcomeComponent, BoardComponent } from './component';
-import { TaskService, SettingsService } from './service';
+import { AddItemComponent, AddSectionComponent, PageComponent, SectionComponent, ItemComponent, HeaderComponent, WelcomeComponent, BoardComponent } from './component';
+import { TaskService } from './service';
 
 export const dialogs = [
   AddItemComponent,
-  AddSectionComponent,
-  SettingsComponent
+  AddSectionComponent
 ]
 
 export const components = [
@@ -18,6 +17,5 @@ export const components = [
 ];
 
 export const providers = [
-  TaskService,
-  SettingsService
+  TaskService
 ]

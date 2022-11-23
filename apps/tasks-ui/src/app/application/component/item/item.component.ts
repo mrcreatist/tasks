@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ItemModel } from '@libs/shared';
-import { TaskService } from '../../service';
 
 @Component({
   selector: 'tasks-ui-item',
@@ -21,10 +20,6 @@ export class ItemComponent {
     DELETE: 'Delete',
     UPDATE: 'Update'
   }
-
-  constructor (
-    private _task: TaskService
-  ) { }
 
   onAction(action: string) {
     switch (action) {

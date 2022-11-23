@@ -1,8 +1,7 @@
 <mat-toolbar class="mat-elevation-z10" color="primary">
   <span>Tasks</span>
   <span class="spacer"></span>
-  <!-- <mat-icon class="setting" (click)="openSettings()">settings</mat-icon> -->
-  <ng-container *ngIf="boardList()?.length" [ngTemplateOutlet]="tasksAction"></ng-container>
+  <ng-container *ngIf="boards?.length" [ngTemplateOutlet]="tasksAction"></ng-container>
   <button mat-flat-button class="button right_btn" (click)="addNewSection()">
     <mat-icon>add</mat-icon> Board
   </button>
@@ -16,7 +15,7 @@
     <mat-icon>add</mat-icon> Task
   </button>
   <mat-menu #board="matMenu">
-    <button *ngFor="let board of boardList()" mat-menu-item (click)="addTask(board)">
+    <button *ngFor="let board of boards" mat-menu-item (click)="addTask(board)">
       <h4>{{board.name}}</h4>
     </button>
   </mat-menu>

@@ -45,10 +45,10 @@ export class TaskService {
   }
 
   item = {
-    create: (boardId: number, title: string, description: string) => {
+    create: (boardId: number, task: ItemDataModel) => {
       this.newItem(<NotificationModel<SocketItemPayload>>{
         action: SOCKET_EVENT.CREATE_TASK,
-        data: { boardId, title, description }
+        data: { boardId, title: task.title, description: task.description }
       })
 
       // if (this.setting.SORT_MODE === SortModeEnum.BY_CREATED) {

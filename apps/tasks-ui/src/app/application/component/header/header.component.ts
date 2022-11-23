@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BoardModel } from '@libs/shared';
+import { BoardModel, ItemDataModel } from '@libs/shared';
+import { NotificationModel } from '../../model';
 import { TaskService } from '../../service';
 import { AddItemComponent } from '../add-item';
 import { AddSectionComponent } from '../add-section';
@@ -22,47 +23,29 @@ export class HeaderComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.updateBoardList();
+    this.subscribeNotification();
   }
 
-  // updateBoardList() {
-  //   this.boards = [];
-  //   // this._task.getList()?.forEach((item: BoardModel) => this.boards.push(item));
-  // }
+  subscribeNotification() {
+    this.task.listenNotification().subscribe((notification: NotificationModel<any>) => {
+      if (notification.action === null) this.boards = this.task.read();
+    });
+  }
 
   addNewSection() {
     this.dialog.open(AddSectionComponent, {
       width: '250px'
     }).afterClosed().subscribe((result: string) => {
-      if (result) {
-        this.task.section.create(result);
-      }
+      if (result) this.task.section.create(result);
     });
-  }
-
-  boardList(): Array<BoardModel> {
-    return this.task.read();
   }
 
   addTask(board: BoardModel) {
+    console.log('in here');
     this.dialog.open(AddItemComponent, {
       width: '250px'
-    }).afterClosed().subscribe(result => {
-      if (result) {
-        console.log(result);
-        // this._task.addItem(board.id, result)
-      }
+    }).afterClosed().subscribe((result: ItemDataModel) => {
+      if (result) this.task.item.create(board.id, result);
     });
   }
-
-  // openSettings() {
-  //   this.dialog.open(SettingsComponent, {
-  //     width: '500px'
-  //   }).afterClosed().subscribe(res => {
-  //     if (res) {
-  //       this._snackBar.open(res);
-  //       setTimeout(() => this._snackBar.dismiss(), 3000);
-  //     }
-  //   });
-  // }
 }
