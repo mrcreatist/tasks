@@ -41,14 +41,8 @@ export class TaskServer {
 
   private socketListener() {
     this.io.on('connection', (socket) => {
-
-      // notify about new user
       console.log('new connection', socket.id);
-
-      // initial file read
       socket.emit(SOCKET_EVENT.SYNC, FILE.read());
-
-      // socket route events
       const route = new SocketRoute();
       route.establish(socket);
     });

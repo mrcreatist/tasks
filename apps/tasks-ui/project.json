@@ -6,9 +6,7 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/tasks-ui",
         "index": "apps/tasks-ui/src/index.html",
@@ -16,10 +14,7 @@
         "polyfills": "apps/tasks-ui/src/polyfills.ts",
         "tsConfig": "apps/tasks-ui/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": [
-          "apps/tasks-ui/src/favicon.ico",
-          "apps/tasks-ui/src/assets"
-        ],
+        "assets": ["apps/tasks-ui/src/favicon.ico", "apps/tasks-ui/src/assets"],
         "styles": [
           "./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css",
           "apps/tasks-ui/src/styles.scss"
@@ -31,8 +26,8 @@
           "budgets": [
             {
               "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumWarning": "1mb",
+              "maximumError": "2mb"
             },
             {
               "type": "anyComponentStyle",
@@ -88,9 +83,7 @@
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": [
-        "coverage/apps/tasks-ui"
-      ],
+      "outputs": ["coverage/apps/tasks-ui"],
       "options": {
         "jestConfig": "apps/tasks-ui/jest.config.js",
         "passWithNoTests": true
